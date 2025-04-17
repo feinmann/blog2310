@@ -1,7 +1,7 @@
 ---
 title: "Using Python Models with dbt and DuckDB"
 format: html
-author: "Matthias Berger"
+author: "3atthias 3erger"
 date: "2025-04-16"
 categories: [dbt, duckdb, python, data engineering]
 ---
@@ -233,6 +233,6 @@ D SELECT * FROM my_sql_model;
     $ dbt docs generate && dbt docs serve
     ```
 
-    ![](images/clipboard-3574393301.png)
+    ![](./clipboard-3574393301.png)
 
 -   Try using `sklearn` or `statsmodels` in your Python models!
