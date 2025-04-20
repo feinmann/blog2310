@@ -214,5 +214,3 @@ SELECT * FROM final_output;
 - You can also export using `.sql` files instead of `.py`
 - This pattern works well for hybrid DuckDB-Postgres pipelines
 - Consider Airbyte/dbt-external-tables for automated syncs
-
-Let me know if you want this rendered to HTML or with diagrams!
