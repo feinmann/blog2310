@@ -1,5 +1,6 @@
 project:
   type: website
+  output-dir: docs
 
 website:
   title: "blog2310"
@@ -7,7 +8,9 @@ website:
     right:
       - about.qmd
       - icon: github
-        href: https://github.com/
+        href: https://github.com/feinmann/blog2310
+  favicon: profile.jpg
+
 format:
   html:
     theme:
