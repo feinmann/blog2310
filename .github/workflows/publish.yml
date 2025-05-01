@@ -21,9 +21,16 @@ jobs:
         with:
           output-dir: docs
 
+      - name: List files in docs directory
+        run: |
+          ls -la docs/
+          echo "Contents of docs directory:"
+          find docs/ -type f
+
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GH_PAT }}
           publish_dir: ./docs
-          commit_message: "Update site" 
+          commit_message: "Update site"
+          force_orphan: true 
