@@ -162,28 +162,87 @@ Create `models/export_to_postgres.py`:
 
 ```python
 import pandas as pd
+import psycopg2
+from psycopg2 import sql
 
 def model(dbt, session):
     dbt.config(materialized="table")
 
     df = dbt.ref("my_sql_model").to_df()
 
-    # Install and load the postgres extension
+    # --- STEP 1: Create table in PostgreSQL if it doesn't exist ---
+    create_table_if_not_exists(df)
+
+    # --- STEP 2: Use DuckDB to load and insert the data ---
     session.execute("INSTALL postgres;")
     session.execute("LOAD postgres;")
-    session.execute("ATTACH 'dbname=mydb user=postgres host=127.0.0.1' AS mydb (TYPE postgres);")
-
-    # Register df as a DuckDB table
+    session.execute("ATTACH 'dbname=mydb user=postgres password=postgres host=127.0.0.1' AS mydb (TYPE postgres);")
     session.register("export_df", df)
 
-    # Now use INSERT INTO ... SELECT * FROM export_df
-    # The target table must already exist in PostgreSQL, or you’ll need to CREATE it beforehand
+    session.execute("TRUNCATE mydb.final_output;")
+
     session.execute("""
         INSERT INTO mydb.final_output
         SELECT * FROM export_df;
     """)
 
     return df
+
+
+# Helper: Map pandas dtypes to PostgreSQL types
+def duckdb_type(dtype):
+    if pd.api.types.is_integer_dtype(dtype):
+        return "BIGINT"
+    elif pd.api.types.is_float_dtype(dtype):
+        return "DOUBLE PRECISION"
+    elif pd.api.types.is_bool_dtype(dtype):
+        return "BOOLEAN"
+    elif pd.api.types.is_datetime64_any_dtype(dtype):
+        return "TIMESTAMP"
+    else:
+        return "TEXT"
+
+
+# Create the table in Postgres if it doesn't already exist
+def create_table_if_not_exists(df):
+    conn = psycopg2.connect(
+        dbname="mydb",
+        user="postgres",
+        password="postgres",
+        host="127.0.0.1",
+        port=5432
+    )
+    cur = conn.cursor()
+
+    # Check if table exists
+    cur.execute("""
+        SELECT EXISTS (
+            SELECT FROM information_schema.tables
+            WHERE table_schema = 'public'
+            AND table_name = 'final_output'
+        );
+    """)
+    exists = cur.fetchone()[0]
+
+    if not exists:
+        # Build CREATE TABLE statement
+        columns = [
+            sql.SQL("{} {}").format(
+                sql.Identifier(col),
+                sql.SQL(duckdb_type(dtype))
+            )
+            for col, dtype in zip(df.columns, df.dtypes)
+        ]
+        create_stmt = sql.SQL("CREATE TABLE final_output ({})").format(
+            sql.SQL(", ").join(columns)
+        )
+
+        cur.execute(create_stmt)
+        conn.commit()
+        print("✅ Created table 'final_output' in PostgreSQL")
+
+    cur.close()
+    conn.close()
 ```
 
 ~~Replace `<your_password>` with your actual Postgres password.~~
@@ -196,28 +255,25 @@ TODO: What about authentification?
 ```bash
 $ dbt run
 
-07:12:23  Running with dbt=1.9.4
-07:12:23  Registered adapter: duckdb=1.9.3
-07:12:23  Found 5 models, 1 seed, 4 data tests, 428 macros
-07:12:23
-07:12:23  Concurrency: 1 threads (target='dev')
-07:12:23
-07:12:23  1 of 5 START sql table model main.my_first_dbt_model ........................... [RUN]
-07:12:23  1 of 5 OK created sql table model main.my_first_dbt_model ...................... [OK in 0.05s]
-07:12:23  2 of 5 START python table model main.my_python_model ........................... [RUN]
-07:12:24  2 of 5 OK created python table model main.my_python_model ...................... [OK in 0.90s]
-07:12:24  3 of 5 START sql view model main.my_second_dbt_model ........................... [RUN]
-07:12:24  3 of 5 OK created sql view model main.my_second_dbt_model ...................... [OK in 0.02s]
-07:12:24  4 of 5 START sql view model main.my_sql_model .................................. [RUN]
-07:12:24  4 of 5 OK created sql view model main.my_sql_model ............................. [OK in 0.02s]
-07:12:24  5 of 5 START python table model main.export_to_postgres ........................ [RUN]
-07:12:24  5 of 5 OK created python table model main.export_to_postgres ................... [OK in 0.10s]
-07:12:24
-07:12:24  Finished running 3 table models, 2 view models in 0 hours 0 minutes and 1.17 seconds (1.17s).
-07:12:24
-07:12:24  Completed successfully
-07:12:24
-07:12:24  Done. PASS=5 WARN=0 ERROR=0 SKIP=0 TOTAL=5
+10:04:57  Running with dbt=1.9.4
+10:04:58  Registered adapter: duckdb=1.9.3
+10:04:58  Unable to do partial parsing because a project config has changed
+10:04:58  Found 3 models, 1 seed, 428 macros
+10:04:58
+10:04:58  Concurrency: 1 threads (target='dev')
+10:04:58
+10:04:58  1 of 3 START python table model main.my_python_model ........................... [RUN]
+10:04:59  1 of 3 OK created python table model main.my_python_model ...................... [OK in 0.24s]
+10:04:59  2 of 3 START sql view model main.my_sql_model .................................. [RUN]
+10:04:59  2 of 3 OK created sql view model main.my_sql_model ............................. [OK in 0.03s]
+10:04:59  3 of 3 START python table model main.export_to_postgres ........................ [RUN]
+10:04:59  3 of 3 OK created python table model main.export_to_postgres ................... [OK in 0.08s]
+10:04:59
+10:04:59  Finished running 2 table models, 1 view model in 0 hours 0 minutes and 0.42 seconds (0.42s).
+10:04:59
+10:04:59  Completed successfully
+10:04:59
+10:04:59  Done. PASS=3 WARN=0 ERROR=0 SKIP=0 TOTAL=3
 ```
 
 This will:
@@ -231,7 +287,7 @@ This will:
 ## 🧪 Step 10: Verify in Postgres
 
 ```bash
-psql -U postgres -d mydb
+$ psql -U postgres -d mydb
 
 # Inside psql:
 SELECT * FROM final_output;
