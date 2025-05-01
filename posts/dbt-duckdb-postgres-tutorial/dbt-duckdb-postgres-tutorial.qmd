@@ -23,24 +23,25 @@ This tutorial walks you through:
 
 ```bash
 # Install Postgres
-sudo pacman -S postgresql
+$ sudo pacman -S postgresql
 
 # Initialize the database
-sudo -iu postgres initdb -D /var/lib/postgres/data
+$ sudo -iu postgres initdb -D /var/lib/postgres/data
 
 # Start and enable the service
-sudo systemctl start postgresql
-sudo systemctl enable postgresql
+$ sudo systemctl start postgresql
+$ sudo systemctl enable postgresql
 
 # Set a password for the postgres user
-sudo -iu postgres psql
+$ sudo -iu postgres psql
+
 # Inside psql:
 \password postgres
 # Then exit:
 \q
 
 # Create a database as postgres user for this tutorial
-sudo -iu postgres createdb mydb
+$ sudo -iu postgres createdb mydb
 ```
 
 > You now have a PostgreSQL database running at `localhost:5432`.
@@ -50,12 +51,12 @@ sudo -iu postgres createdb mydb
 ## 🧰 Step 2: Create Python Virtual Environment
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate  
+$ python -m venv .venv
+$ source .venv/bin/activate  
 # or .venv\Scripts\activate on Windows; 
 # or source .venv/bin/activate.fish
 
-pip install dbt-duckdb duckdb pandas psycopg2
+$ pip install dbt-duckdb duckdb pandas psycopg2
 ```
 
 ---
@@ -63,8 +64,8 @@ pip install dbt-duckdb duckdb pandas psycopg2
 ## 🏗️ Step 3: Initialize dbt Project
 
 ```bash
-dbt init dbt_duckdb_postgres_demo
-cd dbt_duckdb_postgres_demo
+$ dbt init dbt_duckdb_postgres_demo
+$ cd dbt_duckdb_postgres_demo
 ```
 
 Choose `duckdb` as the adapter.
@@ -100,7 +101,23 @@ id,first_name,last_name
 Then run:
 
 ```bash
-dbt seed
+$ dbt seed
+
+07:07:17  Running with dbt=1.9.4
+07:07:17  Registered adapter: duckdb=1.9.3
+07:07:17  Unable to do partial parsing because saved manifest not found. Starting full parse.
+07:07:18  Found 2 models, 1 seed, 4 data tests, 428 macros
+07:07:18
+07:07:18  Concurrency: 1 threads (target='dev')
+07:07:18
+07:07:18  1 of 1 START seed file main.my_seed_data ....................................... [RUN]
+07:07:18  1 of 1 OK loaded seed file main.my_seed_data ................................... [INSERT 3 in 0.04s]
+07:07:18
+07:07:18  Finished running 1 seed in 0 hours 0 minutes and 0.12 seconds (0.12s).
+07:07:18
+07:07:18  Completed successfully
+07:07:18
+07:07:18  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 TOTAL=1
 ```
 
 ---
@@ -169,14 +186,38 @@ def model(dbt, session):
     return df
 ```
 
-Replace `<your_password>` with your actual Postgres password.
+~~Replace `<your_password>` with your actual Postgres password.~~
+TODO: What about authentification?
 
 ---
 
 ## ▶️ Step 9: Run Everything
 
 ```bash
-dbt run
+$ dbt run
+
+07:12:23  Running with dbt=1.9.4
+07:12:23  Registered adapter: duckdb=1.9.3
+07:12:23  Found 5 models, 1 seed, 4 data tests, 428 macros
+07:12:23
+07:12:23  Concurrency: 1 threads (target='dev')
+07:12:23
+07:12:23  1 of 5 START sql table model main.my_first_dbt_model ........................... [RUN]
+07:12:23  1 of 5 OK created sql table model main.my_first_dbt_model ...................... [OK in 0.05s]
+07:12:23  2 of 5 START python table model main.my_python_model ........................... [RUN]
+07:12:24  2 of 5 OK created python table model main.my_python_model ...................... [OK in 0.90s]
+07:12:24  3 of 5 START sql view model main.my_second_dbt_model ........................... [RUN]
+07:12:24  3 of 5 OK created sql view model main.my_second_dbt_model ...................... [OK in 0.02s]
+07:12:24  4 of 5 START sql view model main.my_sql_model .................................. [RUN]
+07:12:24  4 of 5 OK created sql view model main.my_sql_model ............................. [OK in 0.02s]
+07:12:24  5 of 5 START python table model main.export_to_postgres ........................ [RUN]
+07:12:24  5 of 5 OK created python table model main.export_to_postgres ................... [OK in 0.10s]
+07:12:24
+07:12:24  Finished running 3 table models, 2 view models in 0 hours 0 minutes and 1.17 seconds (1.17s).
+07:12:24
+07:12:24  Completed successfully
+07:12:24
+07:12:24  Done. PASS=5 WARN=0 ERROR=0 SKIP=0 TOTAL=5
 ```
 
 This will:
