@@ -6,8 +6,6 @@ date: "2025-04-17"
 categories: [dbt, duckdb, postgres, python, data engineering]
 ---
 
-# Full Tutorial: dbt with DuckDB, Python + SQL Models, and Export to Postgres
-
 This tutorial walks you through:
 
 1. Installing and setting up Postgres on Arch Linux
