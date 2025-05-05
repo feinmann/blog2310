@@ -6,13 +6,13 @@ date: "2025-04-16"
 categories: [dbt, duckdb, python, data engineering]
 ---
 
-# 🐍 Using Python Models with dbt and DuckDB
+# Using Python Models with dbt and DuckDB
 
 This tutorial shows how to use **Python models** alongside **SQL models** in dbt with the `dbt-duckdb` adapter. With this setup, you can do data transformations using both SQL and Python (`pandas`) in the same pipeline!
 
 ------------------------------------------------------------------------
 
-## 🧰 0. Set Up a Python Virtual Environment
+## 0. Set Up a Python Virtual Environment
 
 Before starting, create a virtual environment to isolate dependencies.
 
@@ -32,7 +32,7 @@ $ pip install dbt-duckdb duckdb pandas
 
 ------------------------------------------------------------------------
 
-## ✅ 1. Prerequisites
+## 1. Prerequisites
 
 With the virtual environment active, make sure you have:
 
@@ -43,7 +43,7 @@ With the virtual environment active, make sure you have:
 
 ------------------------------------------------------------------------
 
-## 🏗️ 2. Initialize a dbt Project
+## 2. Initialize a dbt Project
 
 ``` bash
 $ dbt init dbt_duckdb_python_demo
@@ -55,7 +55,7 @@ In between choose `duckdb` as your adapter when prompted.
 
 ------------------------------------------------------------------------
 
-## ⚙️ 3. Configure `profiles.yml`
+## 3. Configure `profiles.yml`
 
 Edit your dbt profile (`~/.dbt/profiles.yml`) to look like this:
 
@@ -70,7 +70,7 @@ dbt_duckdb_python_demo:
 
 ------------------------------------------------------------------------
 
-## 📂 4. Add Seed Data
+## 4. Add Seed Data
 
 Create a CSV file at `seeds/my_seed_data.csv`:
 
@@ -98,7 +98,7 @@ $ dbt seed
 
 ------------------------------------------------------------------------
 
-## 🐼 5. Create a Python Model
+## 5. Create a Python Model
 
 Create a file at `models/my_python_model.py`:
 
@@ -121,7 +121,7 @@ This uses `pandas` to create new columns: `full_name` and `name_length`.
 
 ------------------------------------------------------------------------
 
-## 📄 6. Create a SQL Model
+## 6. Create a SQL Model
 
 Now let’s add a SQL model that builds on the Python model.
 
@@ -142,7 +142,7 @@ This filters the data to only rows with a name longer than 10 characters.
 
 ------------------------------------------------------------------------
 
-## ▶️ 7. Run the Models
+## 7. Run the Models
 
 Now run everything:
 
@@ -178,7 +178,7 @@ You should see both models build: - `my_python_model` (Python with pandas) - `my
 
 ------------------------------------------------------------------------
 
-## 🔍 8. View the Output in DuckDB
+## 8. View the Output in DuckDB
 
 Launch the DuckDB CLI:
 
@@ -213,7 +213,7 @@ D SELECT * FROM my_sql_model;
 
 ------------------------------------------------------------------------
 
-## ✅ Summary
+## Summary
 
 | Component    | File                 | Description                        |
 |--------------|----------------------|------------------------------------|
@@ -223,7 +223,7 @@ D SELECT * FROM my_sql_model;
 
 ------------------------------------------------------------------------
 
-## 🧠 What's Next?
+## What's Next?
 
 -   Add **tests** using `schema.yml`
 
