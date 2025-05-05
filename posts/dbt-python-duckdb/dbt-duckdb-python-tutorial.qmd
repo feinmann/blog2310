@@ -236,3 +236,5 @@ D SELECT * FROM my_sql_model;
     ![](./clipboard-3574393301.png)
 
 -   Try using `sklearn` or `statsmodels` in your Python models!
+
+_If you are missing some explanation and testing of a feature in this tutorial, let me know in the comments section below._
