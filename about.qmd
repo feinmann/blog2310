@@ -6,8 +6,8 @@ about:
   links:
     - icon: github
       text: Github
-      href: https://github.com
+      href: https://github.com/feinmann
 
 ---
 
-About this blog
+In this blog I create tutorials using ChatGPT and finally testing them on my local system and including the output. Topics are related to the overall machine learning process from data engineering over modelling to deployment and monitoring.
