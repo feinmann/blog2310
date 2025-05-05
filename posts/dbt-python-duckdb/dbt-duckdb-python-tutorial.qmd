@@ -3,7 +3,7 @@ title: "Using Python Models with dbt and DuckDB"
 format: html
 author: "3atthias 3erger"
 date: "2025-04-16"
-categories: [dbt, duckdb, python, data engineering]
+categories: [dbt, duckdb, python, data engineering, tutorial]
 ---
 
 This tutorial shows how to use **Python models** alongside **SQL models** in dbt with the `dbt-duckdb` adapter. With this setup, you can do data transformations using both SQL and Python (`pandas`) in the same pipeline!

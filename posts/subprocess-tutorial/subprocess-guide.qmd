@@ -4,7 +4,7 @@ title: "Using the subprocess Module in Python"
 author: "3atthias 3erger"
 date: "2025-05-05"
 format: html
-categories: [python, subprocess, tutorial]
+categories: [python, subprocess, examples]
 ---
 
 # Introduction

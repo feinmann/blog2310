@@ -3,7 +3,7 @@ title: "dbt with DuckDB and Postgres: Python + SQL Models"
 format: html
 author: "3atthias 3erger"
 date: "2025-04-17"
-categories: [dbt, duckdb, postgres, python, data engineering]
+categories: [dbt, duckdb, postgres, python, data engineering, tutorial]
 ---
 
 This tutorial walks you through:
