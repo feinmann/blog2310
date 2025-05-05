@@ -10,6 +10,9 @@ website:
       - icon: github
         href: https://github.com/feinmann/blog2310
   favicon: profile.jpg
+  comments:
+    giscus: 
+      repo: feinmann/blog2310
 
 format:
   html:
