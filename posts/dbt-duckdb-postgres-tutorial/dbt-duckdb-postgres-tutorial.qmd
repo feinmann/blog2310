@@ -6,7 +6,7 @@ date: "2025-04-17"
 categories: [dbt, duckdb, postgres, python, data engineering]
 ---
 
-# 🚀 Full Tutorial: dbt with DuckDB, Python + SQL Models, and Export to Postgres
+# Full Tutorial: dbt with DuckDB, Python + SQL Models, and Export to Postgres
 
 This tutorial walks you through:
 
@@ -19,7 +19,7 @@ This tutorial walks you through:
 
 ---
 
-## 🐘 Step 1: Install and Configure PostgreSQL on Arch Linux
+## Step 1: Install and Configure PostgreSQL on Arch Linux
 
 ```bash
 # Install Postgres
@@ -48,7 +48,7 @@ $ sudo -iu postgres createdb mydb
 
 ---
 
-## 🧰 Step 2: Create Python Virtual Environment
+## Step 2: Create Python Virtual Environment
 
 ```bash
 $ python -m venv .venv
@@ -61,7 +61,7 @@ $ pip install dbt-duckdb duckdb pandas psycopg2
 
 ---
 
-## 🏗️ Step 3: Initialize dbt Project
+## Step 3: Initialize dbt Project
 
 ```bash
 $ dbt init dbt_duckdb_postgres_demo
@@ -72,7 +72,7 @@ Choose `duckdb` as the adapter.
 
 ---
 
-## ⚙️ Step 4: Configure dbt Profile
+## Step 4: Configure dbt Profile
 
 Edit `~/.dbt/profiles.yml`:
 
@@ -87,7 +87,7 @@ dbt_duckdb_postgres_demo:
 
 ---
 
-## 📂 Step 5: Add Seed Data
+## Step 5: Add Seed Data
 
 Create `seeds/my_seed_data.csv`:
 
@@ -122,7 +122,7 @@ $ dbt seed
 
 ---
 
-## 🐍 Step 6: Create a Python Model (DuckDB)
+## Step 6: Create a Python Model (DuckDB)
 
 Create `models/my_python_model.py`:
 
@@ -141,7 +141,7 @@ def model(dbt, session):
 
 ---
 
-## 📄 Step 7: Add a SQL Model (DuckDB)
+## Step 7: Add a SQL Model (DuckDB)
 
 Create `models/my_sql_model.sql`:
 
@@ -156,7 +156,7 @@ WHERE name_length > 10
 
 ---
 
-## 🔄 Step 8: Add Final Python Model That Writes to Postgres
+## Step 8: Add Final Python Model That Writes to Postgres
 
 Create `models/export_to_postgres.py`:
 
@@ -250,7 +250,7 @@ TODO: What about authentification?
 
 ---
 
-## ▶️ Step 9: Run Everything
+## Step 9: Run Everything
 
 ```bash
 $ dbt run
@@ -284,7 +284,7 @@ This will:
 
 ---
 
-## 🧪 Step 10: Verify in Postgres
+## Step 10: Verify in Postgres
 
 ```bash
 $ psql -U postgres -d mydb
@@ -295,7 +295,7 @@ SELECT * FROM final_output;
 
 ---
 
-## ✅ Summary
+## Summary
 
 | Step | Tool        | Output                          |
 |------|-------------|----------------------------------|
@@ -306,7 +306,7 @@ SELECT * FROM final_output;
 
 ---
 
-## 💡 Tips
+## Tips
 
 - You can also export using `.sql` files instead of `.py`
 - This pattern works well for hybrid DuckDB-Postgres pipelines
