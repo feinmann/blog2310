@@ -3,7 +3,6 @@ project:
   output-dir: docs
 
 website:
-  title: "blog2310"
   navbar:
     right:
       - about.qmd
@@ -16,9 +15,7 @@ website:
 
 format:
   html:
-    theme:
-      - cosmo
-      - brand
+    theme: default
     css: styles.css
 
 
