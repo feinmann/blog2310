@@ -1,0 +1,172 @@
+---
+title: "Setting Up a Python Project with uv and ruff"
+format: html
+author: "3atthias 3erger"
+date: "2025-05-06"
+categories: [python, ruff, uv, tutorial]
+---
+
+## 🚀 Introduction
+
+This tutorial walks you through setting up a Python project using [`uv`](https://github.com/astral-sh/uv) for dependency management and [`ruff`](https://docs.astral.sh/ruff/) for linting and formatting, including integrating `ruff` with Git via a pre-commit hook.
+
+By the end, you’ll have:
+- A minimal Python project
+- `uv` for fast, modern package management
+- `ruff` configured for formatting, linting, and as a pre-commit hook
+
+---
+
+## Prerequisites
+
+Make sure you have the following installed:
+
+- Python (>=3.8)
+- Git
+- [`uv`](https://github.com/astral-sh/uv): install with:
+
+```bash
+$ curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+---
+
+## Project Structure
+
+Let’s start by creating a new project:
+
+```bash
+$ uv init example-project
+$ cd example-project
+$ git init
+$ tree -a -L1
+.
+├── .git
+├── main.py
+├── pyproject.toml
+├── .python-version
+└── README.md
+
+2 directories, 4 files
+```
+
+---
+
+## 📦 Step 1: Initialize the project with `uv`
+
+```bash
+$ uv venv         # Create a virtual environment
+Using CPython 3.13.3 interpreter at: /usr/bin/python3.13
+Creating virtual environment at: .venv
+Activate with: source .venv/bin/activate.fish
+$ source .venv/bin/activate.fish # using fish shell
+(example-project) $
+```
+
+Install some basic packages:
+
+- [`pre-commit`](https://pre-commit.com/#install):
+
+```bash
+$ uv pip install pre-commit
+```
+
+```bash
+$ uv pip install ruff
+```
+
+---
+
+## 📝 Step 2: Adjust pyproject.toml
+
+Here's an example `pyproject.toml`:
+
+```toml
+[project]
+name = "my_project"
+version = "0.1.0"
+description = "An example project using uv and ruff"
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+lint.select = ["E", "F", "I"]
+lint.ignore = ["E501"]
+```
+
+---
+
+## 🧪 Step 3: Add a sample script
+
+Create `main.py`:
+
+```python
+def greet(name: str) -> str:
+    return f"Hello, {name}!"
+
+if __name__ == "__main__":
+    print(greet("World"))
+```
+
+Run `ruff` to check the file:
+
+```bash
+ruff check .
+```
+
+Or automatically fix issues:
+
+```bash
+ruff check . --fix
+```
+
+---
+
+## ✅ Step 4: Set up pre-commit hook for `ruff`
+
+Create a `.pre-commit-config.yaml`:
+
+```yaml
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.0  # Replace with latest tag
+    hooks:
+      - id: ruff
+```
+
+Install the hook:
+
+```bash
+pre-commit install
+```
+
+Now `ruff` will run before every commit.
+
+You can also test it manually:
+
+```bash
+pre-commit run --all-files
+```
+
+---
+
+## 🌟 Best Practices
+
+- **Use `pyproject.toml`** as the single config file for tools.
+- **Keep dependencies pinned** with `uv` (via `requirements.txt` or `.lock` files).
+- **Use `ruff` for linting and formatting** — it's fast and all-in-one.
+- **Automate checks** via `pre-commit` and CI.
+
+---
+
+## 📚 Summary
+
+We covered how to:
+
+- Set up a Python project using `uv`
+- Install and configure `ruff`
+- Automate linting with pre-commit hooks
+
+This gives you a solid base for any Python project with modern tooling.
+
+Happy coding! 🚀
