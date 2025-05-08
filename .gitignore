@@ -6,3 +6,6 @@
 /.quarto/
 _site/
 docs/
+
+posts/python-project-uv-ruff/example-project/
+
