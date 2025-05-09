@@ -1,5 +1,4 @@
 ---
-title: "blog2310"
 listing:
   contents: posts
   sort: "date desc"
