@@ -1,8 +1,13 @@
 ---
 title: "Setting Up a Python Project with uv and ruff"
-format: html
 author: "3atthias 3erger"
 date: "2025-05-06"
+format:
+  gfm: default
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: true
 categories: [python, ruff, uv, tutorial]
 ---
 

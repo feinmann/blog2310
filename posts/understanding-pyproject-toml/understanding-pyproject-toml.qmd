@@ -5,6 +5,7 @@ author: "3atthias 3erger"
 date: "2025-05-08"
 categories: [Python, Packaging, Tooling]
 format:
+  gfm: default
   html:
     toc: true
     toc-depth: 3
