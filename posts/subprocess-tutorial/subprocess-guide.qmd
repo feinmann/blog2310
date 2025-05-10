@@ -4,11 +4,11 @@ title: "Using the subprocess Module in Python"
 author: "3atthias 3erger"
 date: "2025-05-05"
 format:
-  gfm: default
   html:
     toc: true
     toc-depth: 3
     code-fold: true
+  gfm: default
 categories: [python, subprocess, examples]
 ---
 

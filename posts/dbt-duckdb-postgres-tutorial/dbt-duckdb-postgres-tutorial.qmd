@@ -3,11 +3,11 @@ title: "dbt with DuckDB and Postgres: Python + SQL Models"
 author: "3atthias 3erger"
 date: "2025-04-17"
 format:
-  gfm: default
   html:
     toc: true
     toc-depth: 3
     code-fold: true
+  gfm: default
 categories: [dbt, duckdb, postgres, python, data engineering, tutorial]
 ---
 
