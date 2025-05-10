@@ -4,6 +4,11 @@ project:
 
 website:
   title: "blog2310"
+  repo-url: https://github.com/feinmann/blog2310
+  issue-url: https://github.com/feinmann/blog2310/issues/new/choose
+  repo-actions: [edit, issue]
+  page-navigation: true
+  bread-crumbs: true
   navbar:
     right:
       - about.qmd
@@ -19,6 +24,8 @@ format:
     theme:
       light: default
     css: styles.css
+    code-copy: true
+    code-overflow: wrap
 
 filters:
   - auto-dark

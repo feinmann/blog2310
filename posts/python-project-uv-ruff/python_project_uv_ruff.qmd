@@ -30,7 +30,7 @@ Make sure you have the following installed:
 - Git
 - [`uv`](https://github.com/astral-sh/uv): install with:
 
-```bash
+``` {.bash filename="Terminal"}
 $ curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
@@ -40,7 +40,7 @@ $ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 Let’s start by creating a new project:
 
-```bash
+``` {.bash filename="Terminal"}
 $ uv init example-project
 $ cd example-project
 $ git init
@@ -59,7 +59,7 @@ $ tree -a -L1
 
 ## Step 1: Initialize the project with `uv`
 
-```bash
+``` {.bash filename="Terminal"}
 $ uv venv         # Create a virtual environment
 Using CPython 3.13.3 interpreter at: /usr/bin/python3.13
 Creating virtual environment at: .venv
@@ -72,11 +72,11 @@ Install some basic packages:
 
 - [`pre-commit`](https://pre-commit.com/#install):
 
-```bash
+``` {.bash filename="Terminal"}
 $ uv pip install pre-commit
 ```
 
-```bash
+``` {.bash filename="Terminal"}
 $ uv pip install ruff
 ```
 
@@ -123,7 +123,7 @@ if __name__ == "__main__":
 
 Run `ruff` to check the file:
 
-```bash
+``` {.bash filename="Terminal"}
 $ ruff check .
 main.py:6:5: F841 Local variable `y` is assigned to but never used
   |
@@ -141,7 +141,7 @@ No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option
 
 Or automatically fix issues:
 
-```bash
+``` {.bash filename="Terminal"}
 $ ruff check . --unsafe-fixes
 main.py:6:5: F841 [*] Local variable `y` is assigned to but never used
   |
@@ -157,7 +157,7 @@ Found 1 error.
 [*] 1 fixable with the --fix option.
 ```
 
-```bash
+``` {.bash filename="Terminal"}
 $ ruff check . --unsafe-fixes --fix
 Found 1 error (1 fixed, 0 remaining).
 ```
@@ -189,7 +189,7 @@ repos:
 
 Install the hook:
 
-```bash
+``` {.bash filename="Terminal"}
 pre-commit install
 ```
 
@@ -197,7 +197,7 @@ Now `ruff` will run before every commit.
 
 You can also test it manually:
 
-```bash
+``` {.bash filename="Terminal"}
 $ pre-commit run --all-files
 [INFO] Initializing environment for https://github.com/astral-sh/ruff-pre-commit.
 [INFO] Installing environment for https://github.com/astral-sh/ruff-pre-commit.

@@ -24,7 +24,7 @@ This tutorial walks you through:
 
 ## Step 1: Install and Configure PostgreSQL on Arch Linux
 
-```bash
+``` {.bash filename="Terminal"}
 # Install Postgres
 $ sudo pacman -S postgresql
 
@@ -53,7 +53,7 @@ $ sudo -iu postgres createdb mydb
 
 ## Step 2: Create Python Virtual Environment
 
-```bash
+``` {.bash filename="Terminal"}
 $ python -m venv .venv
 $ source .venv/bin/activate  
 # or .venv\Scripts\activate on Windows; 
@@ -66,7 +66,7 @@ $ pip install dbt-duckdb duckdb pandas psycopg2
 
 ## Step 3: Initialize dbt Project
 
-```bash
+``` {.bash filename="Terminal"}
 $ dbt init dbt_duckdb_postgres_demo
 $ cd dbt_duckdb_postgres_demo
 ```
@@ -103,7 +103,7 @@ id,first_name,last_name
 
 Then run:
 
-```bash
+``` {.bash filename="Terminal"}
 $ dbt seed
 
 07:07:17  Running with dbt=1.9.4
@@ -255,7 +255,7 @@ TODO: What about authentification?
 
 ## Step 9: Run Everything
 
-```bash
+``` {.bash filename="Terminal"}
 $ dbt run
 
 10:04:57  Running with dbt=1.9.4
@@ -289,7 +289,7 @@ This will:
 
 ## Step 10: Verify in Postgres
 
-```bash
+``` {.bash filename="Terminal"}
 $ psql -U postgres -d mydb
 
 # Inside psql:
