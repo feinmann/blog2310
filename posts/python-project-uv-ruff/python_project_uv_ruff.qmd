@@ -11,7 +11,7 @@ format:
 categories: [python, ruff, uv, tutorial]
 ---
 
-## 🚀 Introduction
+## Introduction
 
 This tutorial walks you through setting up a Python project using [`uv`](https://github.com/astral-sh/uv) for dependency management and [`ruff`](https://docs.astral.sh/ruff/) for linting and formatting, including integrating `ruff` with Git via a pre-commit hook.
 
@@ -57,7 +57,7 @@ $ tree -a -L1
 
 ---
 
-## 📦 Step 1: Initialize the project with `uv`
+## Step 1: Initialize the project with `uv`
 
 ```bash
 $ uv venv         # Create a virtual environment
@@ -82,7 +82,7 @@ $ uv pip install ruff
 
 ---
 
-## 📝 Step 2: Adjust pyproject.toml
+## Step 2: Adjust pyproject.toml
 
 Here's an example `pyproject.toml`:
 
@@ -104,7 +104,7 @@ lint.ignore = ["E501"]
 
 ---
 
-## 🧪 Step 3: Add a sample script
+## Step 3: Add a sample script
 
 Adjust `main.py`:
 
@@ -175,7 +175,7 @@ if __name__ == "__main__":
 ```
 ---
 
-## ✅ Step 4: Set up pre-commit hook for `ruff`
+## Step 4: Set up pre-commit hook for `ruff`
 
 Create a `.pre-commit-config.yaml`:
 
@@ -208,7 +208,7 @@ ruff.....................................................................Passed
 
 ---
 
-## 🌟 Best Practices
+## Best Practices
 
 - **Use `pyproject.toml`** as the single config file for tools.
 - **Keep dependencies pinned** with `uv` (via `requirements.txt` or `.lock` files).
@@ -217,7 +217,7 @@ ruff.....................................................................Passed
 
 ---
 
-## 📚 Summary
+## Summary
 
 We covered how to:
 
@@ -227,4 +227,4 @@ We covered how to:
 
 This gives you a solid base for any Python project with modern tooling.
 
-Happy coding! 🚀
+Happy coding! 
