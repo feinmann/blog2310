@@ -1,0 +1,12 @@
+[
+  {
+    "listing": "/index.html",
+    "items": [
+      "/posts/understanding-pyproject-toml/understanding-pyproject-toml.html",
+      "/posts/python-project-uv-ruff/python_project_uv_ruff.html",
+      "/posts/subprocess-tutorial/subprocess-guide.html",
+      "/posts/dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html",
+      "/posts/dbt-python-duckdb/dbt-duckdb-python-tutorial.html"
+    ]
+  }
+]

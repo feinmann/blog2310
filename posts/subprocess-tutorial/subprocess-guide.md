@@ -1,0 +1,98 @@
+# Using the subprocess Module in Python
+3atthias 3erger
+2025-05-05
+
+# Introduction
+
+The `subprocess` module in Python allows you to spawn new processes,
+connect to their input/output/error pipes, and obtain their return
+codes. It is a powerful interface for running external commands and
+interacting with them in a Pythonic way.
+
+# Basic Usage
+
+The most common way to use `subprocess` is by calling
+`subprocess.run()`. Here’s a simple example:
+
+``` python
+import subprocess
+
+# Run a simple command
+result = subprocess.run(["echo", "Hello from subprocess"], capture_output=True, text=True)
+print(result.stdout)
+```
+
+This will output:
+
+    Hello from subprocess
+
+# Capturing Output
+
+You can capture both standard output and standard error using
+`capture_output=True`:
+
+``` python
+result = subprocess.run(["ls", "non_existent_file"], capture_output=True, text=True)
+print("STDOUT:", result.stdout)
+print("STDERR:", result.stderr)
+```
+
+# Error Handling
+
+Use `check=True` to raise an exception if the command fails:
+
+``` python
+try:
+    subprocess.run(["ls", "non_existent_file"], check=True)
+except subprocess.CalledProcessError as e:
+    print(f"Command failed with exit code {e.returncode}")
+```
+
+# Using Shell Commands
+
+If you need to run a shell command as a string, use `shell=True`. Be
+careful with this as it can be a security hazard when using untrusted
+input.
+
+``` python
+subprocess.run("echo Hello from shell", shell=True)
+```
+
+# Piping Commands
+
+You can simulate piping like `ls | grep py` using `subprocess.Popen`:
+
+``` python
+p1 = subprocess.Popen(["ls"], stdout=subprocess.PIPE)
+p2 = subprocess.Popen(["grep", "py"], stdin=p1.stdout, stdout=subprocess.PIPE)
+p1.stdout.close()
+output = p2.communicate()[0]
+print(output.decode())
+```
+
+# Using subprocess with `with` Statement
+
+When dealing with resources, it’s good practice to use context managers:
+
+``` python
+with subprocess.Popen(["cat"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True) as proc:
+    output, _ = proc.communicate("Hello via cat")
+    print(output)
+```
+
+# Summary
+
+The `subprocess` module is a flexible and powerful way to work with
+system processes in Python. It should be preferred over older modules
+like `os.system` for improved security and control.
+
+For more complex interactions, such as sending input or reading output
+line-by-line, `Popen` is the recommended interface.
+
+------------------------------------------------------------------------
+
+**Note:** Always validate and sanitize any user inputs passed to
+subprocesses to avoid security risks such as shell injection.
+
+*If you are missing some explanation and testing of a feature in this
+tutorial, let me know in the comments section below.*
