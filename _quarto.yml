@@ -18,7 +18,16 @@ website:
   comments:
     giscus: 
       repo: feinmann/blog2310
-
+  page-footer:
+    border: false
+    background: light
+    # following works only with quarto extention `now` by Garrick Aden-Buie
+    # https://pkg.garrickadenbuie.com/quarto-now/
+    left: >- 
+       © {{< now year >}} 3atthias 3erger 
+    right: >-
+      Made with 💙  
+    
 format:
   html:
     theme:
