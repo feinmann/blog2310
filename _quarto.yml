@@ -49,7 +49,3 @@ format:
     code-block-bg: false
     code-copy: true
     code-overflow: wrap
-
-filters:
-  - auto-dark
-
