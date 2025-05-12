@@ -31,8 +31,22 @@ website:
 format:
   html:
     theme:
-      light: default
-    css: styles.css
+      light:
+        - zephyr
+        - _assets/styles-elm-light.scss
+        - _assets/styles-elm-base.scss
+        - _assets/colors.scss
+      dark:
+        - _assets/zephyr-dark.scss
+        - _assets/styles-elm-dark.scss
+        - _assets/styles-elm-base.scss
+        - _assets/colors.scss
+    css:
+      - _assets/panelset-extras.css
+    highlight-style:
+      light: _assets/syntax-elm-light.theme
+      dark: _assets/syntax-elm-dark.theme
+    code-block-bg: false
     code-copy: true
     code-overflow: wrap
 
