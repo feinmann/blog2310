@@ -3,7 +3,7 @@ title: "Understanding `pyproject.toml` in Python Projects"
 description: "A deep dive into the purpose and power of `pyproject.toml` for modern Python tooling."
 author: "3atthias 3erger"
 date: "2025-05-08"
-categories: [Python, Packaging, Tooling]
+categories: [python, packaging, tooling]
 format:
   html:
     toc: true

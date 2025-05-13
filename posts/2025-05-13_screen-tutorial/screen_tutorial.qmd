@@ -3,7 +3,7 @@ title: "Mastering the `screen` Command in Linux"
 description: "A comprehensive tutorial on how to use the screen command in Linux for terminal multiplexing."
 author: "3atthias 3erger"
 date: 2025-05-13
-categories: [linux, shell, screen, tutorial, terminal-tools]
+categories: [linux, shell, screen, tutorial, tooling]
 format:
   html:
     toc: true
@@ -163,30 +163,6 @@ Use arrow keys or `PgUp/PgDn` to scroll.
     ``` {.bash filename="Terminal"}
     $ screen -S mysession -X quit
     ```
-
-## Using `screen` in Fish vs Bash
-
-### Bash Shell
-
-In Bash, `screen` works seamlessly as expected. You can alias commands, add custom screen scripts, or integrate it in `.bashrc`.
-
-### Fish Shell
-
-In Fish, some syntax differs. For example:
-
-``` {.bash filename="Terminal"}
-function screen-attach
-    screen -r $argv[1]
-end
-```
-
-Fish users must remember:
-
--   No `$()` or backticks for command substitution; use `()` instead.
-
--   Variable access uses `set` and array-style referencing (`$argv[1]`).
-
-Fish is more user-friendly in syntax but requires adjusted habits compared to Bash.
 
 ## Interesting Fact
 
