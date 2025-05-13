@@ -1,0 +1,199 @@
+---
+title: "Mastering the `screen` Command in Linux"
+description: "A comprehensive tutorial on how to use the screen command in Linux for terminal multiplexing."
+author: "3atthias 3erger"
+date: 2025-05-13
+categories: [linux, shell, screen, tutorial, terminal-tools]
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: true
+  gfm: default
+---
+
+## Introduction
+
+The `screen` command is a terminal multiplexer that allows users to run multiple shell sessions from a single SSH connection or terminal. With `screen`, you can create detachable terminal sessions that continue to run in the background, even after you disconnect.
+
+## Installing `screen`
+
+On most Linux distributions, `screen` is not installed by default. Here's how you can install it:
+
+**Arch Linux:**
+
+``` {.bash filename="Terminal"}
+sudo pacman -S screen
+```
+
+## Basic Usage
+
+### Starting a New Session
+
+``` {.bash filename="Terminal"}
+screen
+```
+
+This creates a new session. You’ll be placed in a new terminal environment.
+
+### Naming a Session
+
+``` {.bash filename="Terminal"}
+screen -S session_name
+```
+
+Naming sessions helps identify them later when reconnecting.
+
+### Detaching from a Session
+
+``` {.bash filename="Terminal"}
+Ctrl-a d
+```
+
+This detaches your session and keeps it running in the background.
+
+### Listing Sessions
+
+``` {.bash filename="Terminal"}
+screen -ls
+```
+
+Shows all active and detached sessions.
+
+### Identifying a Session
+
+Each screen session is assigned a unique identifier in the format:
+
+```
+PID.session_name
+```
+
+This will print out the name of the actual session:
+
+``` {.bash filename="Terminal"}
+echo $STY
+```
+
+For example:
+
+```
+12345.my_session
+```
+
+If no name is provided when creating the session, only the PID will be shown (e.g., `67890.pts-0.hostname`). Use the session name or PID when reattaching:
+
+``` {.bash filename="Terminal"}
+screen -r 12345
+```
+
+Or:
+
+``` {.bash filename="Terminal"}
+screen -r my_session
+```
+
+### Reattaching to a Session
+
+``` {.bash filename="Terminal"}
+screen -r session_name
+```
+
+This resumes the session you previously detached from.
+
+## Advanced Usage
+
+### Splitting the Screen
+
+To split the terminal horizontally:
+
+``` {.bash filename="Terminal"}
+Ctrl-a S
+```
+
+To switch between regions:
+
+``` {.bash filename="Terminal"}
+Ctrl-a Tab
+```
+
+To create a new shell in the region:
+
+``` {.bash filename="Terminal"}
+Ctrl-a c
+```
+
+### Logging Output
+
+You can log all output of a screen session:
+
+``` {.bash filename="Terminal"}
+Ctrl-a H
+```
+
+This will start logging to a file named `screenlog.0`.
+
+### Locking the Screen
+
+``` {.bash filename="Terminal"}
+Ctrl-a x
+```
+
+Locks the session. You'll need your user password to unlock.
+
+### Scroll Mode
+
+Enter scroll mode to navigate output:
+
+``` {.bash filename="Terminal"}
+Ctrl-a [
+```
+
+Use arrow keys or `PgUp/PgDn` to scroll.
+
+## Useful Command-line Options
+
+-   `-d -m`: Start a session in detached mode
+
+    ``` {.bash filename="Terminal"}
+    screen -d -m -S mysession myscript.sh
+    ```
+
+-   `-X`: Send commands to a running session
+
+    ``` {.bash filename="Terminal"}
+    screen -S mysession -X quit
+    ```
+
+## Using `screen` in Fish vs Bash
+
+### Bash Shell
+
+In Bash, `screen` works seamlessly as expected. You can alias commands, add custom screen scripts, or integrate it in `.bashrc`.
+
+### Fish Shell
+
+In Fish, some syntax differs. For example:
+
+``` fish
+function screen-attach
+    screen -r $argv[1]
+end
+```
+
+Fish users must remember:
+
+-   No `$()` or backticks for command substitution; use `()` instead.
+
+-   Variable access uses `set` and array-style referencing (`$argv[1]`).
+
+Fish is more user-friendly in syntax but requires adjusted habits compared to Bash.
+
+## Interesting Fact
+
+The `screen` command was first released in 1987 and is still actively maintained. Its stability and simplicity have made it a favorite tool for sysadmins and developers working with remote servers, long-running scripts, or unstable connections.
+
+## Conclusion
+
+The `screen` command is a powerful utility for managing terminal sessions, enabling persistent workflows across disconnections and multi-tasking within one terminal. While newer tools like `tmux` offer advanced features, `screen` remains a reliable and widely-used solution.
+
+Whether you're using Bash or Fish, understanding how `screen` operates is a must-have skill for any Linux power user.
