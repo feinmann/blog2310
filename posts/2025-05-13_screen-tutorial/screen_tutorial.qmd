@@ -23,7 +23,7 @@ On most Linux distributions, `screen` is not installed by default. Here's how yo
 **Arch Linux:**
 
 ``` {.bash filename="Terminal"}
-sudo pacman -S screen
+$ sudo pacman -S screen
 ```
 
 ## Basic Usage
@@ -31,7 +31,7 @@ sudo pacman -S screen
 ### Starting a New Session
 
 ``` {.bash filename="Terminal"}
-screen
+$ screen
 ```
 
 This creates a new session. You’ll be placed in a new terminal environment.
@@ -39,7 +39,7 @@ This creates a new session. You’ll be placed in a new terminal environment.
 ### Naming a Session
 
 ``` {.bash filename="Terminal"}
-screen -S session_name
+$ screen -S session_name
 ```
 
 Naming sessions helps identify them later when reconnecting.
@@ -55,7 +55,7 @@ This detaches your session and keeps it running in the background.
 ### Listing Sessions
 
 ``` {.bash filename="Terminal"}
-screen -ls
+$ screen -ls
 ```
 
 Shows all active and detached sessions.
@@ -71,7 +71,7 @@ PID.session_name
 This will print out the name of the actual session:
 
 ``` {.bash filename="Terminal"}
-echo $STY
+$ echo $STY
 ```
 
 For example:
@@ -83,19 +83,19 @@ For example:
 If no name is provided when creating the session, only the PID will be shown (e.g., `67890.pts-0.hostname`). Use the session name or PID when reattaching:
 
 ``` {.bash filename="Terminal"}
-screen -r 12345
+$ screen -r 12345
 ```
 
 Or:
 
 ``` {.bash filename="Terminal"}
-screen -r my_session
+$ screen -r my_session
 ```
 
 ### Reattaching to a Session
 
 ``` {.bash filename="Terminal"}
-screen -r session_name
+$ screen -r session_name
 ```
 
 This resumes the session you previously detached from.
@@ -155,13 +155,13 @@ Use arrow keys or `PgUp/PgDn` to scroll.
 -   `-d -m`: Start a session in detached mode
 
     ``` {.bash filename="Terminal"}
-    screen -d -m -S mysession myscript.sh
+    $ screen -d -m -S mysession myscript.sh
     ```
 
 -   `-X`: Send commands to a running session
 
     ``` {.bash filename="Terminal"}
-    screen -S mysession -X quit
+    $ screen -S mysession -X quit
     ```
 
 ## Using `screen` in Fish vs Bash
@@ -174,7 +174,7 @@ In Bash, `screen` works seamlessly as expected. You can alias commands, add cust
 
 In Fish, some syntax differs. For example:
 
-``` fish
+``` {.bash filename="Terminal"}
 function screen-attach
     screen -r $argv[1]
 end
