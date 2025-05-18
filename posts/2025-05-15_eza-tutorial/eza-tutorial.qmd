@@ -70,6 +70,7 @@ This defines a function `listtree` that behaves like our base command.
 Assuming a directory contains files and subfolders, the output might look like:
 
 ```{.bash filename="Terminal"}
+#| code-overflow: scroll
 Permissions Size User Date Modified Name
 drwxr-xr-x  385M 33   15 Mai 22:42  code/quarto/blog2310
 .rw-r--r--    17 33   17 Apr 22:24  ├── styles.css
