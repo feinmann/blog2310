@@ -3,7 +3,7 @@ title: "Exploring Directory Structures with `eza`"
 description: "A comprehensive guide to using `eza` with tree view and size sorting."
 author: "3atthias 3erger"
 date: 2025-05-15
-categories: [shell, tools, eza, linux, command-line]
+categories: [shell, tooling, eza, linux, shell]
 format:
   html:
     toc: true
