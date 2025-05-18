@@ -1,5 +1,6 @@
 ---
 title: "Using Python Models with dbt and DuckDB"
+description: "A step-by-step tutorial on combining Python and SQL models in dbt using the dbt-duckdb adapter, with practical examples and setup instructions."
 author: "3atthias 3erger"
 date: "2025-04-16"
 format:

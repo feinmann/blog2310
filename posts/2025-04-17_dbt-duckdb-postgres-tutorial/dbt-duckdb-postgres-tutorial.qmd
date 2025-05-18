@@ -1,5 +1,6 @@
 ---
 title: "dbt with DuckDB and Postgres: Python + SQL Models"
+description: "A step-by-step tutorial on using dbt with DuckDB and Postgres, including Python and SQL models, and exporting data from DuckDB to PostgreSQL."
 author: "3atthias 3erger"
 date: "2025-04-17"
 format:

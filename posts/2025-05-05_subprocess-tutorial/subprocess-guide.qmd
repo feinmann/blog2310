@@ -1,6 +1,6 @@
-
 ---
 title: "Using the subprocess Module in Python"
+description: "A practical guide to using Python's subprocess module for running and managing external commands, with examples and best practices."
 author: "3atthias 3erger"
 date: "2025-05-05"
 format:

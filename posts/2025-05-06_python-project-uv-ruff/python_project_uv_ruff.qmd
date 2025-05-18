@@ -1,5 +1,6 @@
 ---
 title: "Setting Up a Python Project with uv and ruff"
+description: "A step-by-step guide to setting up a modern Python project using uv for dependency management and ruff for linting, including pre-commit integration."
 author: "3atthias 3erger"
 date: "2025-05-06"
 format:
