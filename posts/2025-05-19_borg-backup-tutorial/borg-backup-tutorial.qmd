@@ -1,5 +1,6 @@
 ---
 title: "BorgBackup Tutorial"
+draft: true
 description: "A comprehensive tutorial on using BorgBackup for secure and efficient backups."
 author: "3atthias 3erger"
 date: 2025-05-19
