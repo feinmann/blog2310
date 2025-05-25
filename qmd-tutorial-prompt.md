@@ -26,4 +26,4 @@ Do not use emojis. Always prefix bash commands with `$ ` and always put them ins
 Always add an interesting fact about the command at the end of the tutorial. 
 Also add a section about the usage and difference of using the 
 command in fish versus using it in bash. If needed, adjust commands to work
-Arch Linux.
+Arch Linux. Always use uv to init projects and manage virtual python environments.
