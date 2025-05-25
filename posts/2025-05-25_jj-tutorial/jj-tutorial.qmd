@@ -1,0 +1,85 @@
+---
+title: "JJ Version Control Tutorial"
+description: "Learn about jj."
+author: "3atthias 3erger"
+date: 2025-05-25
+categories: [shell, vcs, jj, git]
+format:
+    html:
+        toc: true
+        toc-depth: 3
+        code-fold: true
+    gfm: default
+execute:
+  echo: true
+---
+
+# Introduction to JJ Version Control
+
+JJ is a Git-compatible version control system that aims to be more user-friendly and powerful than Git. In this tutorial, we'll explore the basic commands and workflows of JJ.
+
+## Installation
+
+JJ can be installed using Cargo (Rust's package manager). First, make sure you have Rust installed on your system. Then run:
+
+```{bash}
+cargo install jj-cli
+```
+
+If you don't have Rust installed, you can install it from [rustup.rs](https://rustup.rs/).
+
+After installation, you might need to restart your terminal or add the Cargo binary directory to your PATH. The binary is typically installed at `~/.cargo/bin/jj`.
+
+## Getting Started
+
+Let's first check if JJ is installed and its version:
+
+```{bash}
+jj --version
+```
+
+## Basic Commands
+
+Let's explore some basic JJ commands:
+
+### Initializing a Repository
+
+```{bash}
+$ jj git init jj-tutorial
+Initialized repo in "jj-tutorial"
+```
+
+### Checking Repository Status
+
+```{bash}
+jj status
+```
+
+### Making Changes
+
+Let's create a simple file and commit it:
+
+```{bash}
+echo "Hello, JJ!" > hello.txt
+jj add hello.txt
+jj commit -m "Add hello.txt"
+```
+
+### Viewing History
+
+```{bash}
+jj log
+```
+
+## Working with Branches
+
+Let's try some branch operations:
+
+```{bash}
+jj branch create feature-branch
+jj branch list
+```
+
+## Conclusion
+
+This tutorial covered the basics of JJ version control. Stay tuned for more advanced topics! 
