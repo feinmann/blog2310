@@ -52,7 +52,11 @@ Initialized repo in "jj-tutorial"
 ### Checking Repository Status
 
 ```{bash}
-jj status
+$ cd jj-tutorial
+$ jj status # or jj st
+The working copy has no changes.
+Working copy  (@) : wswnkktq 6725dc6b (empty) (no description set)
+Parent commit (@-): zzzzzzzz 00000000 (empty) (no description set)
 ```
 
 ### Making Changes
