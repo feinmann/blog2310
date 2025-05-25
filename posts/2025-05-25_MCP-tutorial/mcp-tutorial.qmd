@@ -15,7 +15,7 @@ format:
 
 ## Introduction
 
-The Model Context Protocol (MCP) is a standardized communication protocol designed to enable AI models to interact with external systems, tools, and data sources in a consistent and secure manner. MCP acts as a bridge between AI models and the broader digital ecosystem, allowing models to access real-time information, execute commands, and integrate with various applications.
+The Model Context Protocol (MCP) is a standardized communication protocol designed to enable AI models to interact with external systems, tools, and data sources in a consistent and secure manner. MCP acts as a bridge between AI models and the broader digital ecosystem, allowing models to access real-time information, execute commands, and integrate with various applications. Further information on https://github.com/modelcontextprotocol
 
 MCP addresses the fundamental challenge of AI models being limited to their training data by providing a structured way to extend their capabilities through external resources. This protocol enables models to perform tasks like web searches, database queries, file operations, and API calls while maintaining security and reliability.
 
@@ -54,7 +54,7 @@ $ sudo pacman -S python python-pip nodejs npm git
 The official MCP SDK can be installed using pip:
 
 ``` {.bash filename="Terminal"}
-$ pip install mcp-sdk
+$ pip install mcp-context-sdk
 ```
 
 For development purposes, you might also want to install the TypeScript/JavaScript SDK:
