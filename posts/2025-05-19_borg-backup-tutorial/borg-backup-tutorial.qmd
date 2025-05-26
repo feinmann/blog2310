@@ -180,6 +180,29 @@ $ borg create ::archive-name /home/your-username
 
 For regular backups, you should create a `systemd service` as well as a `systemd timer`.
 
+## Arch Linux Daily Backups
+
+For the interested, here are the files that I use for daily backups of `$HOME`:
+
+```{.bash filename="~/bin/backup-home.sh" code-line-numbers="true" .code-overflow-scroll}
+{{< include backup-home.sh >}}
+```
+
+```{.bash filename="~/.config/systemd/user/borg-backup.service" code-line-numbers="true" .code-overflow-scroll}
+{{< include borg-backup.service >}}
+```
+
+```{.bash filename="~/.config/systemd/user/borg-backup.service" code-line-numbers="true" .code-overflow-scroll}
+{{< include borg-backup.timer >}}
+```
+
+
+```{.bash filename="Terminal"}
+$ systemctl --user daemon-reload
+$ systemctl --user restart borg-backup.timer
+$ systemctl --user enable borg-backup.timer
+```
+
 ## Interesting Fact
 
 BorgBackup uses **content-defined chunking** for deduplication. This means that even if a file is moved, renamed, or slightly changed, unchanged data blocks are reused, saving massive amounts of space over time compared to simple file-based backups.
