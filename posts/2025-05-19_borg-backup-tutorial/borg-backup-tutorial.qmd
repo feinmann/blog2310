@@ -1,6 +1,5 @@
 ---
 title: "BorgBackup Tutorial"
-draft: true
 description: "A comprehensive tutorial on using BorgBackup for secure and efficient backups."
 author: "3atthias 3erger"
 date: 2025-05-19
@@ -79,6 +78,8 @@ $ borg create --stats --progress \
 * `--progress`: shows progress during the backup.
 * `--exclude`: avoids backing up unnecessary data.
 
+For more information about `borg create` visit https://borgbackup.readthedocs.io/en/stable/usage/create.html
+
 ## Listing Backup Archives
 
 ```{.bash filename="Terminal"}
@@ -109,13 +110,23 @@ $ borg prune -v --list /path/to/repo \
     --keep-weekly=4 \
     --keep-monthly=6
 ```
+- `--keep-daily=7`: Keep the most recent 7 daily backups.
+- `--keep-weekly=4`: Keep the most recent 4 weekly backups.
+- `--keep-monthly=6`: Keep the most recent 6 monthly backups.
+
+So after running this command:
+
+- You’ll have up to 7 daily backups from the last 7 days.
+- Up to 4 weekly backups (from the past 4 weeks).
+- Up to 6 monthly backups (from the past 6 months).
+- Older archives beyond this retention policy will be deleted to save space.
 
 ## Automating Backups with a Script
 
 You can create a script to automate backups:
 
 ```{.bash filename="Terminal"}
-$ nano ~/bin/borg-backup.sh
+$ vim ~/bin/borg-backup.sh
 ```
 
 Content:
@@ -166,6 +177,8 @@ $ export BORG_REPO="/path/to/repo"
 $ export BORG_PASSPHRASE="your-passphrase"
 $ borg create ::archive-name /home/your-username
 ```
+
+For regular backups, you should create a `systemd service` as well as a `systemd timer`.
 
 ## Interesting Fact
 
