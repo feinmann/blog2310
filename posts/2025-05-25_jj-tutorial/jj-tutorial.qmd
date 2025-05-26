@@ -1,5 +1,6 @@
 ---
 title: "JJ Version Control Tutorial"
+draft: true
 description: "Learn about jj."
 author: "3atthias 3erger"
 date: 2025-05-25
