@@ -4,6 +4,7 @@ project:
 
 website:
   title: "blog2310"
+  draft-mode: unlinked
   repo-url: https://github.com/feinmann/blog2310
   issue-url: https://github.com/feinmann/blog2310/issues/new/choose
   repo-actions: [edit, issue]
