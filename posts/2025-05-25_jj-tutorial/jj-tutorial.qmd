@@ -11,8 +11,6 @@ format:
         toc-depth: 3
         code-fold: true
     gfm: default
-execute:
-  echo: true
 ---
 
 # Introduction to JJ Version Control
