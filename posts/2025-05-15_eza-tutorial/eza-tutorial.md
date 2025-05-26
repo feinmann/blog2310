@@ -1,0 +1,135 @@
+# Exploring Directory Structures with `eza`
+3atthias 3erger
+2025-05-15
+
+## Introduction
+
+`eza` is a modern replacement for `ls`, providing a more user-friendly
+and feature-rich way to explore directories and file systems. In this
+tutorial, we will explore the following command:
+
+<div class="code-with-filename">
+
+**Terminal**
+
+``` bash
+$ eza -T -lh -L 2 --total-size -s size
+```
+
+</div>
+
+We will explain what each part of the command does, how to use it
+effectively in both Bash and Fish shells, and demonstrate appending a
+folder path to explore it recursively.
+
+## Breaking Down the Command
+
+<div class="code-with-filename">
+
+**Terminal**
+
+``` bash
+$ eza -T -lh -L 2 --total-size -s size
+```
+
+</div>
+
+### Flags and Their Meanings:
+
+- `-T`: Displays the output in a **tree view**, showing nested folder
+  contents in a hierarchical structure.
+- `-l`: Uses the **long view** format, providing detailed information
+  about each file (like permissions, owner, size, and date).
+- `-h`: Human-readable file sizes, e.g., `1.2K`, `3.4M`, etc.
+- `-L 2`: Limits the recursion depth to **2 levels** when printing
+  directory contents.
+- `--total-size`: Displays the **cumulative size** of the directory and
+  its contents.
+- `-s size`: Sorts files and directories by their **size**.
+
+## Appending a Folder Path
+
+You can use this command to explore a specific folder by appending the
+path to the end. For example, to explore the `~/Documents` directory:
+
+<div class="code-with-filename">
+
+**Terminal**
+
+``` bash
+$ eza -T -lh -L 2 --total-size -s size ~/Documents
+```
+
+</div>
+
+This will present a tree view of the `Documents` directory, showing up
+to two levels deep, with files sorted by size.
+
+## Usage in Fish
+
+Fish shell syntax is slightly different for functions and aliases but
+running standalone commands like this one works identically:
+
+<div class="code-with-filename">
+
+**Terminal**
+
+``` bash
+> eza -T -lh -L 2 --total-size -s size
+```
+
+</div>
+
+The `>` symbol indicates Fish shell’s prompt. If you want to create a
+reusable command or alias in Fish, use:
+
+<div class="code-with-filename">
+
+**Terminal**
+
+``` bash
+> function listtree
+    eza -T -lh -L 2 --total-size -s size $argv
+  end
+```
+
+</div>
+
+This defines a function `listtree` that behaves like our base command.
+
+## Example Output
+
+Assuming a directory contains files and subfolders, the output might
+look like:
+
+<div class="code-with-filename">
+
+**Terminal**
+
+``` bash
+#| code-overflow: scroll
+Permissions Size User Date Modified Name
+drwxr-xr-x  385M 33   15 Mai 22:42  code/quarto/blog2310
+.rw-r--r--    17 33   17 Apr 22:24  ├── styles.css
+.rw-r--r--   171 33    9 Mai 22:35  ├── index.qmd
+.rw-r--r--   253 33   15 Mai 22:38  ├── blog2310.Rproj
+.rw-r--r--   398 33    2 Mai 07:13  ├── about.qmd
+.rw-r--r--   616 33   13 Mai 21:26  ├── qmd-tutorial-prompt.md
+.rw-r--r--  1,2k 33   13 Mai 20:59  ├── _quarto.yml
+drwxr-xr-x  5,2k 33    9 Mai 22:32  ├── _extensions
+drwxr-xr-x   35k 33   13 Mai 21:23  ├── _assets
+.rw-r--r--   61k 33   17 Apr 22:24  ├── profile.jpg
+drwxr-xr-x  1,4M 33   25 Apr 21:37  ├── _site
+drwxr-xr-x  2,7M 33   15 Mai 22:42  ├── docs
+drwxr-xr-x  351M 33   15 Mai 22:40  └── posts
+```
+
+</div>
+
+## Interesting Fact
+
+`eza` was written in Rust and is known for its speed and safety compared
+to traditional `ls`. It also supports **Git integration**, showing Git
+status next to files out of the box when run inside a Git repo.
+
+------------------------------------------------------------------------

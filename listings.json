@@ -1,0 +1,16 @@
+[
+  {
+    "listing": "/index.html",
+    "items": [
+      "/posts/2025-05-23_understanding-umask/understanding-umask.html",
+      "/posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html",
+      "/posts/2025-05-15_eza-tutorial/eza-tutorial.html",
+      "/posts/2025-05-13_screen-tutorial/screen_tutorial.html",
+      "/posts/2025-05-08_understanding-pyproject-toml/understanding-pyproject-toml.html",
+      "/posts/2025-05-06_python-project-uv-ruff/python_project_uv_ruff.html",
+      "/posts/2025-05-05_subprocess-tutorial/subprocess-guide.html",
+      "/posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html",
+      "/posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html"
+    ]
+  }
+]
