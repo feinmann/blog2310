@@ -21,7 +21,8 @@ JJ is a Git-compatible version control system that aims to be more user-friendly
 
 JJ can be installed using Cargo (Rust's package manager). First, make sure you have Rust installed on your system. Then run:
 
-```{bash}
+```{.bash filename="Terminal"}
+```{.bash}
 cargo install jj-cli
 ```
 
@@ -33,7 +34,7 @@ After installation, you might need to restart your terminal or add the Cargo bin
 
 Let's first check if JJ is installed and its version:
 
-```{bash}
+```{.bash filename="Terminal"}
 jj --version
 ```
 
@@ -43,14 +44,14 @@ Let's explore some basic JJ commands:
 
 ### Initializing a Repository
 
-```{bash}
+```{.bash filename="Terminal"}
 $ jj git init jj-tutorial
 Initialized repo in "jj-tutorial"
 ```
 
 ### Checking Repository Status
 
-```{bash}
+```{.bash filename="Terminal"}
 $ cd jj-tutorial
 $ jj status # or jj st
 The working copy has no changes.
@@ -62,7 +63,7 @@ Parent commit (@-): zzzzzzzz 00000000 (empty) (no description set)
 
 Let's create a simple file and commit it:
 
-```{bash}
+```{.bash filename="Terminal"}
 echo "Hello, JJ!" > hello.txt
 jj add hello.txt
 jj commit -m "Add hello.txt"
@@ -70,7 +71,7 @@ jj commit -m "Add hello.txt"
 
 ### Viewing History
 
-```{bash}
+```{.bash filename="Terminal"}
 jj log
 ```
 
@@ -78,7 +79,7 @@ jj log
 
 Let's try some branch operations:
 
-```{bash}
+```{.bash filename="Terminal"}
 jj branch create feature-branch
 jj branch list
 ```
