@@ -3,23 +3,37 @@ name: Publish Quarto Blog
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Quarto
         uses: quarto-dev/quarto-actions/setup@v2
         with:
           tinytex: true
 
-      - name: Render
-        uses: quarto-dev/quarto-actions/render@v2
+      - name: Cache Quarto
+        uses: actions/cache@v4
         with:
-          output-dir: docs
+          path: |
+            ~/.quarto
+            .quarto
+          key: quarto-${{ runner.os }}-${{ hashFiles('_quarto.yml') }}
+
+      - name: Render and validate
+        run: |
+          quarto render
+          quarto check
 
       - name: List files in docs directory
         run: |
@@ -27,10 +41,11 @@ jobs:
           echo "Contents of docs directory:"
           find docs/ -type f
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.GH_PAT }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs
           commit_message: "Update site"
           force_orphan: true 
