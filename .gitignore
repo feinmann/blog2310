@@ -1,11 +1,39 @@
+# R specific
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
 
+# Quarto
 /.quarto/
 _site/
 docs/
 
+# Logs
+*.log
+*.tmp
+*.temp
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Development environments
+.venv/
+.env
+.env.local
+node_modules/
+
+# Python
+*.pyc
+__pycache__/
+.pytest_cache/
+.coverage
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# Project specific
 posts/2025-05-06_python-project-uv-ruff/example-project/
 
