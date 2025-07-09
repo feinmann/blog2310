@@ -19,8 +19,6 @@ jobs:
 
       - name: Setup Quarto
         uses: quarto-dev/quarto-actions/setup@v2
-        with:
-          tinytex: true
 
       - name: Cache Quarto
         uses: actions/cache@v4
