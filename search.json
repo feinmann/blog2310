@@ -1,0 +1,541 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "In this blog I create tutorials using ChatGPT and finally testing them on my local system and including the output. Topics are related to the overall machine learning process from data engineering over modelling to deployment and monitoring. And system administration :D"
+  },
+  {
+    "objectID": "posts/2025-05-05_subprocess-tutorial/subprocess-guide.html",
+    "href": "posts/2025-05-05_subprocess-tutorial/subprocess-guide.html",
+    "title": "Using the subprocess Module in Python",
+    "section": "",
+    "text": "Introduction\nThe subprocess module in Python allows you to spawn new processes, connect to their input/output/error pipes, and obtain their return codes. It is a powerful interface for running external commands and interacting with them in a Pythonic way.\n\n\nBasic Usage\nThe most common way to use subprocess is by calling subprocess.run(). Here’s a simple example:\nimport subprocess\n\n# Run a simple command\nresult = subprocess.run([\"echo\", \"Hello from subprocess\"], capture_output=True, text=True)\nprint(result.stdout)\nThis will output:\nHello from subprocess\n\n\nCapturing Output\nYou can capture both standard output and standard error using capture_output=True:\nresult = subprocess.run([\"ls\", \"non_existent_file\"], capture_output=True, text=True)\nprint(\"STDOUT:\", result.stdout)\nprint(\"STDERR:\", result.stderr)\n\n\nError Handling\nUse check=True to raise an exception if the command fails:\ntry:\n    subprocess.run([\"ls\", \"non_existent_file\"], check=True)\nexcept subprocess.CalledProcessError as e:\n    print(f\"Command failed with exit code {e.returncode}\")\n\n\nUsing Shell Commands\nIf you need to run a shell command as a string, use shell=True. Be careful with this as it can be a security hazard when using untrusted input.\nsubprocess.run(\"echo Hello from shell\", shell=True)\n\n\nPiping Commands\nYou can simulate piping like ls | grep py using subprocess.Popen:\np1 = subprocess.Popen([\"ls\"], stdout=subprocess.PIPE)\np2 = subprocess.Popen([\"grep\", \"py\"], stdin=p1.stdout, stdout=subprocess.PIPE)\np1.stdout.close()\noutput = p2.communicate()[0]\nprint(output.decode())\n\n\nUsing subprocess with with Statement\nWhen dealing with resources, it’s good practice to use context managers:\nwith subprocess.Popen([\"cat\"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True) as proc:\n    output, _ = proc.communicate(\"Hello via cat\")\n    print(output)\n\n\nSummary\nThe subprocess module is a flexible and powerful way to work with system processes in Python. It should be preferred over older modules like os.system for improved security and control.\nFor more complex interactions, such as sending input or reading output line-by-line, Popen is the recommended interface.\n\nNote: Always validate and sanitize any user inputs passed to subprocesses to avoid security risks such as shell injection.\nIf you are missing some explanation and testing of a feature in this tutorial, let me know in the comments section below."
+  },
+  {
+    "objectID": "posts/2025-05-13_screen-tutorial/screen_tutorial.html",
+    "href": "posts/2025-05-13_screen-tutorial/screen_tutorial.html",
+    "title": "Mastering the screen Command in Linux",
+    "section": "",
+    "text": "The screen command is a terminal multiplexer that allows users to run multiple shell sessions from a single SSH connection or terminal. With screen, you can create detachable terminal sessions that continue to run in the background, even after you disconnect."
+  },
+  {
+    "objectID": "posts/2025-05-13_screen-tutorial/screen_tutorial.html#introduction",
+    "href": "posts/2025-05-13_screen-tutorial/screen_tutorial.html#introduction",
+    "title": "Mastering the screen Command in Linux",
+    "section": "",
+    "text": "The screen command is a terminal multiplexer that allows users to run multiple shell sessions from a single SSH connection or terminal. With screen, you can create detachable terminal sessions that continue to run in the background, even after you disconnect."
+  },
+  {
+    "objectID": "posts/2025-05-13_screen-tutorial/screen_tutorial.html#installing-screen",
+    "href": "posts/2025-05-13_screen-tutorial/screen_tutorial.html#installing-screen",
+    "title": "Mastering the screen Command in Linux",
+    "section": "Installing screen",
+    "text": "Installing screen\nOn most Linux distributions, screen is not installed by default. Here’s how you can install it:\nArch Linux:\n\n\nTerminal\n\n$ sudo pacman -S screen"
+  },
+  {
+    "objectID": "posts/2025-05-13_screen-tutorial/screen_tutorial.html#basic-usage",
+    "href": "posts/2025-05-13_screen-tutorial/screen_tutorial.html#basic-usage",
+    "title": "Mastering the screen Command in Linux",
+    "section": "Basic Usage",
+    "text": "Basic Usage\n\nStarting a New Session\n\n\nTerminal\n\n$ screen\n\nThis creates a new session. You’ll be placed in a new terminal environment.\n\n\nNaming a Session\n\n\nTerminal\n\n$ screen -S session_name\n\nNaming sessions helps identify them later when reconnecting.\n\n\nDetaching from a Session\n\n\nTerminal\n\nCtrl-a d\n\nThis detaches your session and keeps it running in the background.\n\n\nListing Sessions\n\n\nTerminal\n\n$ screen -ls\n\nShows all active and detached sessions.\n\n\nIdentifying a Session\nEach screen session is assigned a unique identifier in the format:\nPID.session_name\nThis will print out the name of the actual session:\n\n\nTerminal\n\n$ echo $STY\n\nFor example:\n12345.my_session\nIf no name is provided when creating the session, only the PID will be shown (e.g., 67890.pts-0.hostname). Use the session name or PID when reattaching:\n\n\nTerminal\n\n$ screen -r 12345\n\nOr:\n\n\nTerminal\n\n$ screen -r my_session\n\n\n\nReattaching to a Session\n\n\nTerminal\n\n$ screen -r session_name\n\nThis resumes the session you previously detached from."
+  },
+  {
+    "objectID": "posts/2025-05-13_screen-tutorial/screen_tutorial.html#advanced-usage",
+    "href": "posts/2025-05-13_screen-tutorial/screen_tutorial.html#advanced-usage",
+    "title": "Mastering the screen Command in Linux",
+    "section": "Advanced Usage",
+    "text": "Advanced Usage\n\nSplitting the Screen\nTo split the terminal horizontally:\n\n\nTerminal\n\nCtrl-a S\n\nTo switch between regions:\n\n\nTerminal\n\nCtrl-a Tab\n\nTo create a new shell in the region:\n\n\nTerminal\n\nCtrl-a c\n\n\n\nLogging Output\nYou can log all output of a screen session:\n\n\nTerminal\n\nCtrl-a H\n\nThis will start logging to a file named screenlog.0.\n\n\nLocking the Screen\n\n\nTerminal\n\nCtrl-a x\n\nLocks the session. You’ll need your user password to unlock.\n\n\nScroll Mode\nEnter scroll mode to navigate output:\n\n\nTerminal\n\nCtrl-a [\n\nUse arrow keys or PgUp/PgDn to scroll."
+  },
+  {
+    "objectID": "posts/2025-05-13_screen-tutorial/screen_tutorial.html#useful-command-line-options",
+    "href": "posts/2025-05-13_screen-tutorial/screen_tutorial.html#useful-command-line-options",
+    "title": "Mastering the screen Command in Linux",
+    "section": "Useful Command-line Options",
+    "text": "Useful Command-line Options\n\n-d -m: Start a session in detached mode\n\n\nTerminal\n\n$ screen -d -m -S mysession myscript.sh\n\n-X: Send commands to a running session\n\n\nTerminal\n\n$ screen -S mysession -X quit"
+  },
+  {
+    "objectID": "posts/2025-05-13_screen-tutorial/screen_tutorial.html#interesting-fact",
+    "href": "posts/2025-05-13_screen-tutorial/screen_tutorial.html#interesting-fact",
+    "title": "Mastering the screen Command in Linux",
+    "section": "Interesting Fact",
+    "text": "Interesting Fact\nThe screen command was first released in 1987 and is still actively maintained. Its stability and simplicity have made it a favorite tool for sysadmins and developers working with remote servers, long-running scripts, or unstable connections."
+  },
+  {
+    "objectID": "posts/2025-05-13_screen-tutorial/screen_tutorial.html#conclusion",
+    "href": "posts/2025-05-13_screen-tutorial/screen_tutorial.html#conclusion",
+    "title": "Mastering the screen Command in Linux",
+    "section": "Conclusion",
+    "text": "Conclusion\nThe screen command is a powerful utility for managing terminal sessions, enabling persistent workflows across disconnections and multi-tasking within one terminal. While newer tools like tmux offer advanced features, screen remains a reliable and widely-used solution.\nWhether you’re using Bash or Fish, understanding how screen operates is a must-have skill for any Linux power user."
+  },
+  {
+    "objectID": "posts/2025-05-06_python-project-uv-ruff/python_project_uv_ruff.html",
+    "href": "posts/2025-05-06_python-project-uv-ruff/python_project_uv_ruff.html",
+    "title": "Setting Up a Python Project with uv and ruff",
+    "section": "",
+    "text": "This tutorial walks you through setting up a Python project using uv for dependency management and ruff for linting and formatting, including integrating ruff with Git via a pre-commit hook.\nBy the end, you’ll have: - A minimal Python project - uv for fast, modern package management - ruff configured for formatting, linting, and as a pre-commit hook"
+  },
+  {
+    "objectID": "posts/2025-05-06_python-project-uv-ruff/python_project_uv_ruff.html#introduction",
+    "href": "posts/2025-05-06_python-project-uv-ruff/python_project_uv_ruff.html#introduction",
+    "title": "Setting Up a Python Project with uv and ruff",
+    "section": "",
+    "text": "This tutorial walks you through setting up a Python project using uv for dependency management and ruff for linting and formatting, including integrating ruff with Git via a pre-commit hook.\nBy the end, you’ll have: - A minimal Python project - uv for fast, modern package management - ruff configured for formatting, linting, and as a pre-commit hook"
+  },
+  {
+    "objectID": "posts/2025-05-06_python-project-uv-ruff/python_project_uv_ruff.html#prerequisites",
+    "href": "posts/2025-05-06_python-project-uv-ruff/python_project_uv_ruff.html#prerequisites",
+    "title": "Setting Up a Python Project with uv and ruff",
+    "section": "Prerequisites",
+    "text": "Prerequisites\nMake sure you have the following installed:\n\nPython (&gt;=3.8)\nGit\nuv: install with:\n\n\n\nTerminal\n\n$ curl -LsSf https://astral.sh/uv/install.sh | sh"
+  },
+  {
+    "objectID": "posts/2025-05-06_python-project-uv-ruff/python_project_uv_ruff.html#project-structure",
+    "href": "posts/2025-05-06_python-project-uv-ruff/python_project_uv_ruff.html#project-structure",
+    "title": "Setting Up a Python Project with uv and ruff",
+    "section": "Project Structure",
+    "text": "Project Structure\nLet’s start by creating a new project:\n\n\nTerminal\n\n$ uv init example-project\n$ cd example-project\n$ git init\n$ tree -a -L1\n.\n├── .git\n├── main.py\n├── pyproject.toml\n├── .python-version\n└── README.md\n\n2 directories, 4 files"
+  },
+  {
+    "objectID": "posts/2025-05-06_python-project-uv-ruff/python_project_uv_ruff.html#step-1-initialize-the-project-with-uv",
+    "href": "posts/2025-05-06_python-project-uv-ruff/python_project_uv_ruff.html#step-1-initialize-the-project-with-uv",
+    "title": "Setting Up a Python Project with uv and ruff",
+    "section": "Step 1: Initialize the project with uv",
+    "text": "Step 1: Initialize the project with uv\n\n\nTerminal\n\n$ uv venv         # Create a virtual environment\nUsing CPython 3.13.3 interpreter at: /usr/bin/python3.13\nCreating virtual environment at: .venv\nActivate with: source .venv/bin/activate.fish\n$ source .venv/bin/activate.fish # using fish shell\n(example-project) $\n\nInstall some basic packages:\n\npre-commit:\n\n\n\nTerminal\n\n$ uv pip install pre-commit\n\n\n\nTerminal\n\n$ uv pip install ruff"
+  },
+  {
+    "objectID": "posts/2025-05-06_python-project-uv-ruff/python_project_uv_ruff.html#step-2-adjust-pyproject.toml",
+    "href": "posts/2025-05-06_python-project-uv-ruff/python_project_uv_ruff.html#step-2-adjust-pyproject.toml",
+    "title": "Setting Up a Python Project with uv and ruff",
+    "section": "Step 2: Adjust pyproject.toml",
+    "text": "Step 2: Adjust pyproject.toml\nHere’s an example pyproject.toml:\n[project]\nname = \"example-project\"\nversion = \"0.1.0\"\ndescription = \"An example project using uv and ruff\"\nreadme = \"README.md\"\nrequires-python = \"&gt;=3.13\"\ndependencies = []\n\n[tool.ruff]\nline-length = 88\ntarget-version = \"py311\"\nlint.select = [\"E\", \"F\", \"I\"]\nlint.ignore = [\"E501\"]"
+  },
+  {
+    "objectID": "posts/2025-05-06_python-project-uv-ruff/python_project_uv_ruff.html#step-3-add-a-sample-script",
+    "href": "posts/2025-05-06_python-project-uv-ruff/python_project_uv_ruff.html#step-3-add-a-sample-script",
+    "title": "Setting Up a Python Project with uv and ruff",
+    "section": "Step 3: Add a sample script",
+    "text": "Step 3: Add a sample script\nAdjust main.py:\ndef greet(name: str) -&gt; str:\n    return f\"Hello, {name}!\"\n\ndef foo():\n    x = 1\n    y = 2\n    return x\n\nif __name__ == \"__main__\":\n    print(greet(\"World\"))\nRun ruff to check the file:\n\n\nTerminal\n\n$ ruff check .\nmain.py:6:5: F841 Local variable `y` is assigned to but never used\n  |\n4 | def foo():\n5 |     x = 1\n6 |     y = 2\n  |     ^ F841\n7 |     return x\n  |\n  = help: Remove assignment to unused variable `y`\n\nFound 1 error.\nNo fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).\n\nOr automatically fix issues:\n\n\nTerminal\n\n$ ruff check . --unsafe-fixes\nmain.py:6:5: F841 [*] Local variable `y` is assigned to but never used\n  |\n4 | def foo():\n5 |     x = 1\n6 |     y = 2\n  |     ^ F841\n7 |     return x\n  |\n  = help: Remove assignment to unused variable `y`\n\nFound 1 error.\n[*] 1 fixable with the --fix option.\n\n\n\nTerminal\n\n$ ruff check . --unsafe-fixes --fix\nFound 1 error (1 fixed, 0 remaining).\n\ndef greet(name: str) -&gt; str:\n    return f\"Hello, {name}!\"\n\ndef foo():\n    x = 1\n    return x\n\nif __name__ == \"__main__\":\n    print(greet(\"World\"))"
+  },
+  {
+    "objectID": "posts/2025-05-06_python-project-uv-ruff/python_project_uv_ruff.html#step-4-set-up-pre-commit-hook-for-ruff",
+    "href": "posts/2025-05-06_python-project-uv-ruff/python_project_uv_ruff.html#step-4-set-up-pre-commit-hook-for-ruff",
+    "title": "Setting Up a Python Project with uv and ruff",
+    "section": "Step 4: Set up pre-commit hook for ruff",
+    "text": "Step 4: Set up pre-commit hook for ruff\nCreate a .pre-commit-config.yaml:\nrepos:\n  - repo: https://github.com/astral-sh/ruff-pre-commit\n    rev: v0.4.0  # Replace with latest tag\n    hooks:\n      - id: ruff\nInstall the hook:\n\n\nTerminal\n\npre-commit install\n\nNow ruff will run before every commit.\nYou can also test it manually:\n\n\nTerminal\n\n$ pre-commit run --all-files\n[INFO] Initializing environment for https://github.com/astral-sh/ruff-pre-commit.\n[INFO] Installing environment for https://github.com/astral-sh/ruff-pre-commit.\n[INFO] Once installed this environment will be reused.\n[INFO] This may take a few minutes...\nruff.....................................................................Passed"
+  },
+  {
+    "objectID": "posts/2025-05-06_python-project-uv-ruff/python_project_uv_ruff.html#best-practices",
+    "href": "posts/2025-05-06_python-project-uv-ruff/python_project_uv_ruff.html#best-practices",
+    "title": "Setting Up a Python Project with uv and ruff",
+    "section": "Best Practices",
+    "text": "Best Practices\n\nUse pyproject.toml as the single config file for tools.\nKeep dependencies pinned with uv (via requirements.txt or .lock files).\nUse ruff for linting and formatting — it’s fast and all-in-one.\nAutomate checks via pre-commit and CI."
+  },
+  {
+    "objectID": "posts/2025-05-06_python-project-uv-ruff/python_project_uv_ruff.html#summary",
+    "href": "posts/2025-05-06_python-project-uv-ruff/python_project_uv_ruff.html#summary",
+    "title": "Setting Up a Python Project with uv and ruff",
+    "section": "Summary",
+    "text": "Summary\nWe covered how to:\n\nSet up a Python project using uv\nInstall and configure ruff\nAutomate linting with pre-commit hooks\n\nThis gives you a solid base for any Python project with modern tooling.\nHappy coding!"
+  },
+  {
+    "objectID": "posts/2025-05-08_understanding-pyproject-toml/understanding-pyproject-toml.html",
+    "href": "posts/2025-05-08_understanding-pyproject-toml/understanding-pyproject-toml.html",
+    "title": "Understanding pyproject.toml in Python Projects",
+    "section": "",
+    "text": "Introduction\nPython packaging has long been fragmented and confusing. The introduction of pyproject.toml aims to bring consistency and clarity. This file is now a cornerstone of modern Python projects, especially when using tools like Poetry, Flit, uv, or even pip itself.\nThis tutorial explores pyproject.toml, its structure, why it matters, and how it fits into Python’s evolving packaging ecosystem.\n\n\n\nWhat is pyproject.toml?\nAt its core, pyproject.toml is a configuration file defined by PEP 518 and extended in PEP 621. It standardizes the way projects declare build systems and metadata.\n\nGoals:\n\nDeclare build system requirements.\nServe as a central place for tool-specific configuration.\nMake Python packaging more interoperable and tool-agnostic.\n\n\n\n\n\nBasic Structure\nHere’s a minimal example:\n[build-system]\nrequires = [\"setuptools\", \"wheel\"]\nbuild-backend = \"setuptools.build_meta\"\n\nExplained:\n\nrequires: Dependencies needed to build the project.\nbuild-backend: The build tool to use (e.g., setuptools, flit, poetry).\n\n\n\n\n\nTool Configuration\nOne of the strengths of pyproject.toml is that it allows multiple tools to store config in the same file.\nExample with Black and isort:\n[tool.black]\nline-length = 88\ntarget-version = [\"py310\"]\n\n[tool.isort]\nprofile = \"black\"\nThis avoids cluttering the root directory with many *.cfg or *.ini files.\n\nTipp: Configuring flake8\nWhile flake8 traditionally uses a setup.cfg or .flake8 file, it can also be configured in pyproject.toml via the flake8-pyproject plugin.\nExample configuration:\n[tool.flake8]\nmax-line-length = 88\nextend-ignore = [\"E203\", \"W503\"]\nexclude = [\".git\", \"__pycache__\", \"build\", \"dist\"]\n\n\nNotes:\n\nYou must install flake8-pyproject for flake8 to recognize this configuration.\nThis approach keeps all tool configuration centralized.\n\n\n\n\n\nSpecifying Project Metadata\nWith PEP 621, you can define your project metadata directly in pyproject.toml:\n[project]\nname = \"my-awesome-package\"\nversion = \"0.1.0\"\ndescription = \"An example Python package\"\nauthors = [\n  { name=\"Your Name\", email=\"you@example.com\" }\n]\nlicense = { text = \"MIT\" }\ndependencies = [\n  \"requests &gt;=2.25\",\n  \"pandas\"\n]\nThis eliminates the need for setup.py in many cases.\n\n\n\nReal-World Example with Poetry\nPoetry uses pyproject.toml as its single source of truth.\n[tool.poetry]\nname = \"example-project\"\nversion = \"0.1.0\"\ndescription = \"A sample project using Poetry\"\nauthors = [\"Jane Doe &lt;jane@example.com&gt;\"]\n\n[tool.poetry.dependencies]\npython = \"^3.10\"\nrequests = \"^2.25.1\"\n\n[tool.poetry.dev-dependencies]\npytest = \"^7.0\"\n\n[build-system]\nrequires = [\"poetry-core\"]\nbuild-backend = \"poetry.core.masonry.api\"\n\n\n\nUsing pyproject.toml with uv\nuv is a modern, fast Python package manager developed by Astral. It is designed as a drop-in replacement for pip, pip-tools, and virtualenv, offering significantly faster resolution and installation speeds.\nuv uses pyproject.toml as a primary source of dependency information. When present, uv will read dependencies from the [project] table, similar to what Poetry uses.\n\nExample:\n[project]\nname = \"uv-sample\"\nversion = \"0.1.0\"\ndependencies = [\n  \"httpx\",\n  \"rich\"\n]\nYou can then run:\n\n\nTerminal\n\n$ uv pip install\n\nThis command will install dependencies defined in the pyproject.toml file, using uv’s fast resolver and installer. uv also supports lock files (uv.lock) for reproducible installs.\n\n\nBenefits of using uv:\n\nUltra-fast dependency resolution and installation.\nUnified handling of environments, installs, and lockfiles.\nCompatibility with pyproject.toml-based workflows.\n\nuv represents a significant step forward in Python tooling, particularly for developers who want performance and simplicity.\n\n\n\n\nWhy It Matters\n\nCleaner Repos: One file for all configuration.\nTool Interoperability: Works with setuptools, flit, poetry, uv, and more.\nBuild Isolation: Ensures builds use correct dependencies.\nForward-Compatible: Future tools and standards will likely rely on it.\n\n\n\n\nCommon Gotchas\n\nNot all tools support pyproject.toml yet. Sometimes there are workarounds.\nSome older versions of pip (&lt;19) ignore pyproject.toml. (#TODO: is this true?)\nIncorrect build-backend paths can break builds.\n\n\n\n\nConclusion\npyproject.toml is more than just a config file—it’s a pivotal part of modern Python development. Understanding how to use it effectively will help you write cleaner, more maintainable, and tool-friendly code.\nFeel free to copy parts of this file into your own projects and start benefiting from the simplicity and power it provides.\n\n\n\nResources\n\nPEP 518\nPEP 621\nPython Packaging Guide\nPoetry Documentation\nuv on GitHub"
+  },
+  {
+    "objectID": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html",
+    "href": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html",
+    "title": "Using Python Models with dbt and DuckDB",
+    "section": "",
+    "text": "This tutorial shows how to use Python models alongside SQL models in dbt with the dbt-duckdb adapter. With this setup, you can do data transformations using both SQL and Python (pandas) in the same pipeline!"
+  },
+  {
+    "objectID": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html#set-up-a-python-virtual-environment",
+    "href": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html#set-up-a-python-virtual-environment",
+    "title": "Using Python Models with dbt and DuckDB",
+    "section": "0. Set Up a Python Virtual Environment",
+    "text": "0. Set Up a Python Virtual Environment\nBefore starting, create a virtual environment to isolate dependencies.\n# Create a virtual environment\n$ python -m venv .venv\n\n# Activate it\n$ source .venv/bin/activate\nOnce activated, install the required packages.\n$ pip install dbt-duckdb duckdb pandas"
+  },
+  {
+    "objectID": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html#prerequisites",
+    "href": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html#prerequisites",
+    "title": "Using Python Models with dbt and DuckDB",
+    "section": "1. Prerequisites",
+    "text": "1. Prerequisites\nWith the virtual environment active, make sure you have:\n\nPython 3.8+\ndbt-duckdb\nduckdb\npandas"
+  },
+  {
+    "objectID": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html#initialize-a-dbt-project",
+    "href": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html#initialize-a-dbt-project",
+    "title": "Using Python Models with dbt and DuckDB",
+    "section": "2. Initialize a dbt Project",
+    "text": "2. Initialize a dbt Project\n$ dbt init dbt_duckdb_python_demo\n$\n$ cd dbt_duckdb_python_demo\nIn between choose duckdb as your adapter when prompted."
+  },
+  {
+    "objectID": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html#configure-profiles.yml",
+    "href": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html#configure-profiles.yml",
+    "title": "Using Python Models with dbt and DuckDB",
+    "section": "3. Configure profiles.yml",
+    "text": "3. Configure profiles.yml\nEdit your dbt profile (~/.dbt/profiles.yml) to look like this:\ndbt_duckdb_python_demo:\n  target: dev\n  outputs:\n    dev:\n      type: duckdb\n      path: \"dbt_duckdb_python_demo.duckdb\""
+  },
+  {
+    "objectID": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html#add-seed-data",
+    "href": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html#add-seed-data",
+    "title": "Using Python Models with dbt and DuckDB",
+    "section": "4. Add Seed Data",
+    "text": "4. Add Seed Data\nCreate a CSV file at seeds/my_seed_data.csv:\nid,first_name,last_name\n1,Alice,Smith\n2,Bob,Jones\n3,Charlie,Brown\nThen update your dbt_project.yml (if needed) to include:\nseeds:\n  dbt_duckdb_python_demo:\n    my_seed_data:\n      file: seeds/my_seed_data.csv\nRun the seed:\n$ dbt seed"
+  },
+  {
+    "objectID": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html#create-a-python-model",
+    "href": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html#create-a-python-model",
+    "title": "Using Python Models with dbt and DuckDB",
+    "section": "5. Create a Python Model",
+    "text": "5. Create a Python Model\nCreate a file at models/my_python_model.py:\n# models/my_python_model.py\n\nimport pandas as pd\n\ndef model(dbt, session):\n    dbt.config(materialized=\"table\")\n\n    df = dbt.ref(\"my_seed_data\")\n    df['full_name'] = df['first_name'] + ' ' + df['last_name']\n    df['name_length'] = df['full_name'].str.len()\n\n    return df\nThis uses pandas to create new columns: full_name and name_length."
+  },
+  {
+    "objectID": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html#create-a-sql-model",
+    "href": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html#create-a-sql-model",
+    "title": "Using Python Models with dbt and DuckDB",
+    "section": "6. Create a SQL Model",
+    "text": "6. Create a SQL Model\nNow let’s add a SQL model that builds on the Python model.\nCreate models/my_sql_model.sql:\n-- models/my_sql_model.sql\n\nSELECT\n    id,\n    full_name,\n    name_length\nFROM {{ ref('my_python_model') }}\nWHERE name_length &gt; 10\nThis filters the data to only rows with a name longer than 10 characters."
+  },
+  {
+    "objectID": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html#run-the-models",
+    "href": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html#run-the-models",
+    "title": "Using Python Models with dbt and DuckDB",
+    "section": "7. Run the Models",
+    "text": "7. Run the Models\nNow run everything:\n$ dbt run\nYou should see both models build: - my_python_model (Python with pandas) - my_sql_model (classic SQL)\n20:52:17  Running with dbt=1.9.4\n20:52:17  Registered adapter: duckdb=1.9.2\n20:52:18  Found 4 models, 1 seed, 4 data tests, 426 macros\n20:52:18  \n20:52:18  Concurrency: 1 threads (target='dev')\n20:52:18  \n20:52:18  1 of 4 START sql table model main.my_first_dbt_model ............... [RUN]\n20:52:18  1 of 4 OK created sql table model main.my_first_dbt_model... [OK in 0.07s]\n20:52:18  2 of 4 START python table model main.my_python_model................ [RUN]\n20:52:18  2 of 4 OK created python table model main.my_python_model... [OK in 0.24s]\n20:52:18  3 of 4 START sql view model main.my_second_dbt_model................ [RUN]\n20:52:18  3 of 4 OK created sql view model main.my_second_dbt_model... [OK in 0.04s]\n20:52:18  4 of 4 START sql view model main.my_sql_model....................... [RUN]\n20:52:18  4 of 4 OK created sql view model main.my_sql_model.......... [OK in 0.02s]\n20:52:18  \n20:52:18  Finished running 2 table models, 2 view models in \n0 hours 0 minutes and 0.45 seconds (0.45s).\n20:52:18  \n20:52:18  Completed successfully\n20:52:18  \n20:52:18  Done. PASS=4 WARN=0 ERROR=0 SKIP=0 TOTAL=4"
+  },
+  {
+    "objectID": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html#view-the-output-in-duckdb",
+    "href": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html#view-the-output-in-duckdb",
+    "title": "Using Python Models with dbt and DuckDB",
+    "section": "8. View the Output in DuckDB",
+    "text": "8. View the Output in DuckDB\nLaunch the DuckDB CLI:\n$ duckdb dbt_duckdb_python_demo.duckdb\nQuery the models:\nD SELECT * FROM my_python_model;\n┌───────┬────────────┬───────────┬───────────────┬─────────────┐\n│  id   │ first_name │ last_name │   full_name   │ name_length │\n│ int32 │  varchar   │  varchar  │    varchar    │    int64    │\n├───────┼────────────┼───────────┼───────────────┼─────────────┤\n│     1 │ Alice      │ Smith     │ Alice Smith   │          11 │\n│     2 │ Bob        │ Jones     │ Bob Jones     │           9 │\n│     3 │ Charlie    │ Brown     │ Charlie Brown │          13 │\n└───────┴────────────┴───────────┴───────────────┴─────────────┘\nD SELECT * FROM my_sql_model;\n┌───────┬───────────────┬─────────────┐\n│  id   │   full_name   │ name_length │\n│ int32 │    varchar    │    int64    │\n├───────┼───────────────┼─────────────┤\n│     1 │ Alice Smith   │          11 │\n│     3 │ Charlie Brown │          13 │\n└───────┴───────────────┴─────────────┘"
+  },
+  {
+    "objectID": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html#summary",
+    "href": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html#summary",
+    "title": "Using Python Models with dbt and DuckDB",
+    "section": "Summary",
+    "text": "Summary\n\n\n\n\n\n\n\n\nComponent\nFile\nDescription\n\n\n\n\nSeed\nmy_seed_data.csv\nSample input data\n\n\nPython model\nmy_python_model.py\nAdds full_name and name_length\n\n\nSQL model\nmy_sql_model.sql\nFilters names based on length"
+  },
+  {
+    "objectID": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html#whats-next",
+    "href": "posts/2025-04-16_dbt-python-duckdb/dbt-duckdb-python-tutorial.html#whats-next",
+    "title": "Using Python Models with dbt and DuckDB",
+    "section": "What’s Next?",
+    "text": "What’s Next?\n\nAdd tests using schema.yml\nGenerate documentation:\n$ dbt docs generate && dbt docs serve\n\nTry using sklearn or statsmodels in your Python models!\n\nIf you are missing some explanation and testing of a feature in this tutorial, let me know in the comments section below."
+  },
+  {
+    "objectID": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html",
+    "href": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html",
+    "title": "dbt with DuckDB and Postgres: Python + SQL Models",
+    "section": "",
+    "text": "This tutorial walks you through:"
+  },
+  {
+    "objectID": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#step-1-install-and-configure-postgresql-on-arch-linux",
+    "href": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#step-1-install-and-configure-postgresql-on-arch-linux",
+    "title": "dbt with DuckDB and Postgres: Python + SQL Models",
+    "section": "Step 1: Install and Configure PostgreSQL on Arch Linux",
+    "text": "Step 1: Install and Configure PostgreSQL on Arch Linux\n\n\nTerminal\n\n# Install Postgres\n$ sudo pacman -S postgresql\n\n# Initialize the database\n$ sudo -iu postgres initdb -D /var/lib/postgres/data\n\n# Start and enable the service\n$ sudo systemctl start postgresql\n$ sudo systemctl enable postgresql\n\n# Set a password for the postgres user\n$ sudo -iu postgres psql\n\n# Inside psql:\n\\password postgres\n# Then exit:\n\\q\n\n# Create a database as postgres user for this tutorial\n$ sudo -iu postgres createdb mydb\n\n\nYou now have a PostgreSQL database running at localhost:5432."
+  },
+  {
+    "objectID": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#step-2-create-python-virtual-environment",
+    "href": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#step-2-create-python-virtual-environment",
+    "title": "dbt with DuckDB and Postgres: Python + SQL Models",
+    "section": "Step 2: Create Python Virtual Environment",
+    "text": "Step 2: Create Python Virtual Environment\n\n\nTerminal\n\n$ python -m venv .venv\n$ source .venv/bin/activate  \n# or .venv\\Scripts\\activate on Windows; \n# or source .venv/bin/activate.fish\n\n$ pip install dbt-duckdb duckdb pandas psycopg2"
+  },
+  {
+    "objectID": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#step-3-initialize-dbt-project",
+    "href": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#step-3-initialize-dbt-project",
+    "title": "dbt with DuckDB and Postgres: Python + SQL Models",
+    "section": "Step 3: Initialize dbt Project",
+    "text": "Step 3: Initialize dbt Project\n\n\nTerminal\n\n$ dbt init dbt_duckdb_postgres_demo\n$ cd dbt_duckdb_postgres_demo\n\nChoose duckdb as the adapter."
+  },
+  {
+    "objectID": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#step-4-configure-dbt-profile",
+    "href": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#step-4-configure-dbt-profile",
+    "title": "dbt with DuckDB and Postgres: Python + SQL Models",
+    "section": "Step 4: Configure dbt Profile",
+    "text": "Step 4: Configure dbt Profile\nEdit ~/.dbt/profiles.yml:\ndbt_duckdb_postgres_demo:\n  target: dev\n  outputs:\n    dev:\n      type: duckdb\n      path: \"dbt_duckdb_postgres_demo.duckdb\""
+  },
+  {
+    "objectID": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#step-5-add-seed-data",
+    "href": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#step-5-add-seed-data",
+    "title": "dbt with DuckDB and Postgres: Python + SQL Models",
+    "section": "Step 5: Add Seed Data",
+    "text": "Step 5: Add Seed Data\nCreate seeds/my_seed_data.csv:\nid,first_name,last_name\n1,Alice,Smith\n2,Bob,Jones\n3,Charlie,Brown\nThen run:\n\n\nTerminal\n\n$ dbt seed\n\n07:07:17  Running with dbt=1.9.4\n07:07:17  Registered adapter: duckdb=1.9.3\n07:07:17  Unable to do partial parsing because saved manifest not found. Starting full parse.\n07:07:18  Found 2 models, 1 seed, 4 data tests, 428 macros\n07:07:18\n07:07:18  Concurrency: 1 threads (target='dev')\n07:07:18\n07:07:18  1 of 1 START seed file main.my_seed_data ....................................... [RUN]\n07:07:18  1 of 1 OK loaded seed file main.my_seed_data ................................... [INSERT 3 in 0.04s]\n07:07:18\n07:07:18  Finished running 1 seed in 0 hours 0 minutes and 0.12 seconds (0.12s).\n07:07:18\n07:07:18  Completed successfully\n07:07:18\n07:07:18  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 TOTAL=1"
+  },
+  {
+    "objectID": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#step-6-create-a-python-model-duckdb",
+    "href": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#step-6-create-a-python-model-duckdb",
+    "title": "dbt with DuckDB and Postgres: Python + SQL Models",
+    "section": "Step 6: Create a Python Model (DuckDB)",
+    "text": "Step 6: Create a Python Model (DuckDB)\nCreate models/my_python_model.py:\nimport pandas as pd\n\ndef model(dbt, session):\n    dbt.config(materialized=\"table\")\n\n    df = dbt.ref(\"my_seed_data\").to_df()\n    df[\"full_name\"] = df[\"first_name\"] + \" \" + df[\"last_name\"]\n    df[\"name_length\"] = df[\"full_name\"].str.len()\n\n    return df"
+  },
+  {
+    "objectID": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#step-7-add-a-sql-model-duckdb",
+    "href": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#step-7-add-a-sql-model-duckdb",
+    "title": "dbt with DuckDB and Postgres: Python + SQL Models",
+    "section": "Step 7: Add a SQL Model (DuckDB)",
+    "text": "Step 7: Add a SQL Model (DuckDB)\nCreate models/my_sql_model.sql:\nSELECT\n    id,\n    full_name,\n    name_length\nFROM {{ ref('my_python_model') }}\nWHERE name_length &gt; 10"
+  },
+  {
+    "objectID": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#step-8-add-final-python-model-that-writes-to-postgres",
+    "href": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#step-8-add-final-python-model-that-writes-to-postgres",
+    "title": "dbt with DuckDB and Postgres: Python + SQL Models",
+    "section": "Step 8: Add Final Python Model That Writes to Postgres",
+    "text": "Step 8: Add Final Python Model That Writes to Postgres\nCreate models/export_to_postgres.py:\nimport pandas as pd\nimport psycopg2\nfrom psycopg2 import sql\n\ndef model(dbt, session):\n    dbt.config(materialized=\"table\")\n\n    df = dbt.ref(\"my_sql_model\").to_df()\n\n    # --- STEP 1: Create table in PostgreSQL if it doesn't exist ---\n    create_table_if_not_exists(df)\n\n    # --- STEP 2: Use DuckDB to load and insert the data ---\n    session.execute(\"INSTALL postgres;\")\n    session.execute(\"LOAD postgres;\")\n    session.execute(\"ATTACH 'dbname=mydb user=postgres password=postgres host=127.0.0.1' AS mydb (TYPE postgres);\")\n    session.register(\"export_df\", df)\n\n    session.execute(\"TRUNCATE mydb.final_output;\")\n\n    session.execute(\"\"\"\n        INSERT INTO mydb.final_output\n        SELECT * FROM export_df;\n    \"\"\")\n\n    return df\n\n\n# Helper: Map pandas dtypes to PostgreSQL types\ndef duckdb_type(dtype):\n    if pd.api.types.is_integer_dtype(dtype):\n        return \"BIGINT\"\n    elif pd.api.types.is_float_dtype(dtype):\n        return \"DOUBLE PRECISION\"\n    elif pd.api.types.is_bool_dtype(dtype):\n        return \"BOOLEAN\"\n    elif pd.api.types.is_datetime64_any_dtype(dtype):\n        return \"TIMESTAMP\"\n    else:\n        return \"TEXT\"\n\n\n# Create the table in Postgres if it doesn't already exist\ndef create_table_if_not_exists(df):\n    conn = psycopg2.connect(\n        dbname=\"mydb\",\n        user=\"postgres\",\n        password=\"postgres\",\n        host=\"127.0.0.1\",\n        port=5432\n    )\n    cur = conn.cursor()\n\n    # Check if table exists\n    cur.execute(\"\"\"\n        SELECT EXISTS (\n            SELECT FROM information_schema.tables\n            WHERE table_schema = 'public'\n            AND table_name = 'final_output'\n        );\n    \"\"\")\n    exists = cur.fetchone()[0]\n\n    if not exists:\n        # Build CREATE TABLE statement\n        columns = [\n            sql.SQL(\"{} {}\").format(\n                sql.Identifier(col),\n                sql.SQL(duckdb_type(dtype))\n            )\n            for col, dtype in zip(df.columns, df.dtypes)\n        ]\n        create_stmt = sql.SQL(\"CREATE TABLE final_output ({})\").format(\n            sql.SQL(\", \").join(columns)\n        )\n\n        cur.execute(create_stmt)\n        conn.commit()\n        print(\"✅ Created table 'final_output' in PostgreSQL\")\n\n    cur.close()\n    conn.close()\nReplace &lt;your_password&gt; with your actual Postgres password. TODO: What about authentification?"
+  },
+  {
+    "objectID": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#step-9-run-everything",
+    "href": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#step-9-run-everything",
+    "title": "dbt with DuckDB and Postgres: Python + SQL Models",
+    "section": "Step 9: Run Everything",
+    "text": "Step 9: Run Everything\n\n\nTerminal\n\n$ dbt run\n\n10:04:57  Running with dbt=1.9.4\n10:04:58  Registered adapter: duckdb=1.9.3\n10:04:58  Unable to do partial parsing because a project config has changed\n10:04:58  Found 3 models, 1 seed, 428 macros\n10:04:58\n10:04:58  Concurrency: 1 threads (target='dev')\n10:04:58\n10:04:58  1 of 3 START python table model main.my_python_model ........................... [RUN]\n10:04:59  1 of 3 OK created python table model main.my_python_model ...................... [OK in 0.24s]\n10:04:59  2 of 3 START sql view model main.my_sql_model .................................. [RUN]\n10:04:59  2 of 3 OK created sql view model main.my_sql_model ............................. [OK in 0.03s]\n10:04:59  3 of 3 START python table model main.export_to_postgres ........................ [RUN]\n10:04:59  3 of 3 OK created python table model main.export_to_postgres ................... [OK in 0.08s]\n10:04:59\n10:04:59  Finished running 2 table models, 1 view model in 0 hours 0 minutes and 0.42 seconds (0.42s).\n10:04:59\n10:04:59  Completed successfully\n10:04:59\n10:04:59  Done. PASS=3 WARN=0 ERROR=0 SKIP=0 TOTAL=3\n\nThis will: - Seed the data - Run a Python model with pandas - Run a SQL model - Push final results into PostgreSQL"
+  },
+  {
+    "objectID": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#step-10-verify-in-postgres",
+    "href": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#step-10-verify-in-postgres",
+    "title": "dbt with DuckDB and Postgres: Python + SQL Models",
+    "section": "Step 10: Verify in Postgres",
+    "text": "Step 10: Verify in Postgres\n\n\nTerminal\n\n$ psql -U postgres -d mydb\n\n# Inside psql:\nSELECT * FROM final_output;"
+  },
+  {
+    "objectID": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#summary",
+    "href": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#summary",
+    "title": "dbt with DuckDB and Postgres: Python + SQL Models",
+    "section": "Summary",
+    "text": "Summary\n\n\n\nStep\nTool\nOutput\n\n\n\n\n1\nPostgreSQL\nLocal DB on Arch Linux\n\n\n2\nPython venv\nIsolated dev environment\n\n\n3–7\ndbt + DuckDB\nModels with SQL + Python\n\n\n8\nDuckDB → PG\nExported table into Postgres"
+  },
+  {
+    "objectID": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#tips",
+    "href": "posts/2025-04-17_dbt-duckdb-postgres-tutorial/dbt-duckdb-postgres-tutorial.html#tips",
+    "title": "dbt with DuckDB and Postgres: Python + SQL Models",
+    "section": "Tips",
+    "text": "Tips\n\nYou can also export using .sql files instead of .py\nThis pattern works well for hybrid DuckDB-Postgres pipelines\nConsider Airbyte/dbt-external-tables for automated syncs\n\nIf you are missing some explanation and testing of a feature in this tutorial, let me know in the comments section below."
+  },
+  {
+    "objectID": "qmd-tutorial-prompt.html",
+    "href": "qmd-tutorial-prompt.html",
+    "title": "blog2310",
+    "section": "",
+    "text": "Shell Command =\nWrite a tutorial to show the usage and details of the given shell command. Return a qmd file. Always include the header:\nDo not use emojis. Always prefix bash commands with $ and always put them inside\n\n\nTerminal\n\n&lt;content&gt;\n\nAlways add an interesting fact about the command at the end of the tutorial. Also add a section about the usage and difference of using the command in fish versus using it in bash. If needed, adjust commands to work Arch Linux. Always use uv to init projects and manage virtual python environments."
+  },
+  {
+    "objectID": "CLAUDE.html",
+    "href": "CLAUDE.html",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.\n\n\nThis is a Quarto blog project that generates a static website containing technical tutorials and guides. The blog focuses on data engineering, machine learning, and system administration topics.\n\n\n\n\n\n\nquarto render - Renders the entire site to the docs/ directory\nquarto preview - Starts a local development server with live reload\nquarto render &lt;file.qmd&gt; - Renders a specific Quarto markdown file\n\n\n\n\n\nPosts are located in posts/ directory with date-prefixed folder names (e.g., 2025-04-16_dbt-python-duckdb/)\nEach post contains a .qmd file and any supporting assets\nPosts use YAML frontmatter with title, description, author, date, categories, and format specifications\n\n\n\n\n\n\n\n\n_quarto.yml - Main project configuration file defining:\n\nWebsite settings (title, navigation, theming)\nOutput directory (docs/)\nHTML format with light/dark themes using custom SCSS\nRepository integration with GitHub\n\n\n\n\n\n\nindex.qmd - Homepage with automatic post listing\nabout.qmd - About page with author information\nposts/ - Blog posts organized by date-prefixed folders\nposts/_metadata.yml - Global post settings (freeze: true, banner titles, Giscus comments)\n\n\n\n\n\n_assets/ - Custom SCSS files for theming:\n\nstyles-elm-light.scss / styles-elm-dark.scss - Theme-specific styles\nstyles-elm-base.scss - Base styles\ncolors.scss - Color definitions\nsyntax-elm-light.theme / syntax-elm-dark.theme - Code syntax highlighting\n\n\n\n\n\n\ndocs/ - Generated static site (GitHub Pages ready)\n_site/ - Alternative output directory (not used in current config)\n\n\n\n\n\n\nCreate new posts in posts/YYYY-MM-DD_post-name/ format\nWrite content in .qmd files using Quarto markdown syntax\nUse quarto preview during development\nRun quarto render to generate the final site\nThe docs/ directory contains the deployable static site\n\n\n\n\n\nDual themes: Light and dark mode with custom Elm-inspired styling\nCode execution: Posts support executable code blocks (frozen by default)\nComments: Giscus integration for GitHub-based comments\nExtensions: Uses gadenbuie/now extension for dynamic date formatting\n\n\n\n\n\nPosts should include comprehensive YAML frontmatter with categories and descriptions\nUse code-fold: true for collapsible code blocks\nInclude table of contents with toc: true for longer posts\nCategories typically include: tutorial, data engineering, python, dbt, system administration"
+  },
+  {
+    "objectID": "CLAUDE.html#project-overview",
+    "href": "CLAUDE.html#project-overview",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "This is a Quarto blog project that generates a static website containing technical tutorials and guides. The blog focuses on data engineering, machine learning, and system administration topics."
+  },
+  {
+    "objectID": "CLAUDE.html#key-commands",
+    "href": "CLAUDE.html#key-commands",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "quarto render - Renders the entire site to the docs/ directory\nquarto preview - Starts a local development server with live reload\nquarto render &lt;file.qmd&gt; - Renders a specific Quarto markdown file\n\n\n\n\n\nPosts are located in posts/ directory with date-prefixed folder names (e.g., 2025-04-16_dbt-python-duckdb/)\nEach post contains a .qmd file and any supporting assets\nPosts use YAML frontmatter with title, description, author, date, categories, and format specifications"
+  },
+  {
+    "objectID": "CLAUDE.html#project-structure",
+    "href": "CLAUDE.html#project-structure",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "_quarto.yml - Main project configuration file defining:\n\nWebsite settings (title, navigation, theming)\nOutput directory (docs/)\nHTML format with light/dark themes using custom SCSS\nRepository integration with GitHub\n\n\n\n\n\n\nindex.qmd - Homepage with automatic post listing\nabout.qmd - About page with author information\nposts/ - Blog posts organized by date-prefixed folders\nposts/_metadata.yml - Global post settings (freeze: true, banner titles, Giscus comments)\n\n\n\n\n\n_assets/ - Custom SCSS files for theming:\n\nstyles-elm-light.scss / styles-elm-dark.scss - Theme-specific styles\nstyles-elm-base.scss - Base styles\ncolors.scss - Color definitions\nsyntax-elm-light.theme / syntax-elm-dark.theme - Code syntax highlighting\n\n\n\n\n\n\ndocs/ - Generated static site (GitHub Pages ready)\n_site/ - Alternative output directory (not used in current config)"
+  },
+  {
+    "objectID": "CLAUDE.html#development-workflow",
+    "href": "CLAUDE.html#development-workflow",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "Create new posts in posts/YYYY-MM-DD_post-name/ format\nWrite content in .qmd files using Quarto markdown syntax\nUse quarto preview during development\nRun quarto render to generate the final site\nThe docs/ directory contains the deployable static site"
+  },
+  {
+    "objectID": "CLAUDE.html#special-features",
+    "href": "CLAUDE.html#special-features",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "Dual themes: Light and dark mode with custom Elm-inspired styling\nCode execution: Posts support executable code blocks (frozen by default)\nComments: Giscus integration for GitHub-based comments\nExtensions: Uses gadenbuie/now extension for dynamic date formatting"
+  },
+  {
+    "objectID": "CLAUDE.html#content-guidelines",
+    "href": "CLAUDE.html#content-guidelines",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "Posts should include comprehensive YAML frontmatter with categories and descriptions\nUse code-fold: true for collapsible code blocks\nInclude table of contents with toc: true for longer posts\nCategories typically include: tutorial, data engineering, python, dbt, system administration"
+  },
+  {
+    "objectID": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html",
+    "href": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html",
+    "title": "BorgBackup Tutorial",
+    "section": "",
+    "text": "borgbackup (or simply borg) is a powerful and secure deduplicating backup tool. It is particularly suitable for daily backups of your home directory or any important data. Borg compresses, encrypts, and stores data incrementally, making it both space-efficient and secure."
+  },
+  {
+    "objectID": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html#introduction",
+    "href": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html#introduction",
+    "title": "BorgBackup Tutorial",
+    "section": "",
+    "text": "borgbackup (or simply borg) is a powerful and secure deduplicating backup tool. It is particularly suitable for daily backups of your home directory or any important data. Borg compresses, encrypts, and stores data incrementally, making it both space-efficient and secure."
+  },
+  {
+    "objectID": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html#installation",
+    "href": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html#installation",
+    "title": "BorgBackup Tutorial",
+    "section": "Installation",
+    "text": "Installation\nOn Arch Linux, install BorgBackup from the official repositories:\n\n\nTerminal\n\n$ sudo pacman -S borg"
+  },
+  {
+    "objectID": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html#initializing-a-backup-repository",
+    "href": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html#initializing-a-backup-repository",
+    "title": "BorgBackup Tutorial",
+    "section": "Initializing a Backup Repository",
+    "text": "Initializing a Backup Repository\nTo start using Borg, initialize a repository. This can be on a local disk or a remote server via SSH.\n\nLocal Repository\n\n\nTerminal\n\n$ borg init --encryption=repokey-blake2 /path/to/backup/location\nEnter new passphrase:\nEnter same passphrase again:\nDo you want your passphrase to be displayed for verification? [yN]:\n\nIMPORTANT: you will need both KEY AND PASSPHRASE to access this repo!\n\nKey storage location depends on the mode:\n- repokey modes: key is stored in the repository directory.\n- keyfile modes: key is stored in the home directory of this user.\n\nFor any mode, you should:\n1. Export the borg key and store the result at a safe place:\n   borg key export           REPOSITORY encrypted-key-backup\n   borg key export --paper   REPOSITORY encrypted-key-backup.txt\n   borg key export --qr-html REPOSITORY encrypted-key-backup.html\n2. Write down the borg key passphrase and store it at safe place.\n\n\n\nRemote Repository\n\n\nTerminal\n\n$ borg init --encryption=repokey-blake2 user@remote-host:/path/to/backup/location"
+  },
+  {
+    "objectID": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html#creating-a-backup",
+    "href": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html#creating-a-backup",
+    "title": "BorgBackup Tutorial",
+    "section": "Creating a Backup",
+    "text": "Creating a Backup\nCreate a backup archive of your home directory while excluding unnecessary directories:\n\n\nTerminal\n\n$ borg create --stats --progress \\\n    --exclude ~/.cache \\\n    --exclude ~/.conda \\\n    --exclude ~/.julia \\\n    --exclude ~/.cargo \\\n    --exclude ~/.rustup \\\n    --exclude ~/.local \\\n    --exclude ~/Bilder \\\n    --exclude ~/.fastai \\\n    /path/to/repo::home-backup-{now:%Y-%m-%d_%H-%M} \\\n    /home/your-username\n\n\n--stats: shows summary statistics.\n--progress: shows progress during the backup.\n--exclude: avoids backing up unnecessary data.\n\nFor more information about borg create visit https://borgbackup.readthedocs.io/en/stable/usage/create.html"
+  },
+  {
+    "objectID": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html#listing-backup-archives",
+    "href": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html#listing-backup-archives",
+    "title": "BorgBackup Tutorial",
+    "section": "Listing Backup Archives",
+    "text": "Listing Backup Archives\n\n\nTerminal\n\n$ borg list /path/to/repo"
+  },
+  {
+    "objectID": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html#extracting-a-backup",
+    "href": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html#extracting-a-backup",
+    "title": "BorgBackup Tutorial",
+    "section": "Extracting a Backup",
+    "text": "Extracting a Backup\nRestore a specific archive:\n\n\nTerminal\n\n$ borg extract /path/to/repo::home-backup-2025-05-19_14-30\n\nYou can also restore to a specific location:\n\n\nTerminal\n\n$ borg extract --target /home/your-username/restore /path/to/repo::home-backup-2025-05-19_14-30"
+  },
+  {
+    "objectID": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html#pruning-old-backups",
+    "href": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html#pruning-old-backups",
+    "title": "BorgBackup Tutorial",
+    "section": "Pruning Old Backups",
+    "text": "Pruning Old Backups\nTo keep only recent backups:\n\n\nTerminal\n\n$ borg prune -v --list /path/to/repo \\\n    --keep-daily=7 \\\n    --keep-weekly=4 \\\n    --keep-monthly=6\n\n\n--keep-daily=7: Keep the most recent 7 daily backups.\n--keep-weekly=4: Keep the most recent 4 weekly backups.\n--keep-monthly=6: Keep the most recent 6 monthly backups.\n\nSo after running this command:\n\nYou’ll have up to 7 daily backups from the last 7 days.\nUp to 4 weekly backups (from the past 4 weeks).\nUp to 6 monthly backups (from the past 6 months).\nOlder archives beyond this retention policy will be deleted to save space."
+  },
+  {
+    "objectID": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html#automating-backups-with-a-script",
+    "href": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html#automating-backups-with-a-script",
+    "title": "BorgBackup Tutorial",
+    "section": "Automating Backups with a Script",
+    "text": "Automating Backups with a Script\nYou can create a script to automate backups:\n\n\nTerminal\n\n$ vim ~/bin/borg-backup.sh\n\nContent:\n\n\nborg-backup.sh\n\n#!/bin/bash\nexport BORG_REPO=\"/path/to/repo\"\nexport BORG_PASSPHRASE='your-passphrase'\n\nborg create --stats --progress \\\n    --exclude ~/.cache \\\n    --exclude ~/.conda \\\n    --exclude ~/.julia \\\n    --exclude ~/.cargo \\\n    --exclude ~/.rustup \\\n    --exclude ~/.local \\\n    --exclude ~/Bilder \\\n    --exclude ~/.fastai \\\n    ::home-backup-{now:%Y-%m-%d_%H-%M} \\\n    /home/your-username\n\nborg prune -v --list \\\n    --keep-daily=7 --keep-weekly=4 --keep-monthly=6\n\nMake it executable:\n\n\nTerminal\n\n$ chmod +x ~/bin/borg-backup.sh"
+  },
+  {
+    "objectID": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html#using-borg-in-fish-shell-vs-bash",
+    "href": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html#using-borg-in-fish-shell-vs-bash",
+    "title": "BorgBackup Tutorial",
+    "section": "Using Borg in Fish Shell vs Bash",
+    "text": "Using Borg in Fish Shell vs Bash\nBorg commands are mostly shell-independent, but Fish shell does not support some Bash syntax like $VAR without parentheses. To export variables in Fish:\n\nFish Shell:\n\n\nTerminal\n\n&gt; set -x BORG_REPO \"/path/to/repo\"\n&gt; set -x BORG_PASSPHRASE \"your-passphrase\"\n&gt; borg create ::archive-name /home/your-username\n\n\n\nBash Shell:\n\n\nTerminal\n\n$ export BORG_REPO=\"/path/to/repo\"\n$ export BORG_PASSPHRASE=\"your-passphrase\"\n$ borg create ::archive-name /home/your-username\n\nFor regular backups, you should create a systemd service as well as a systemd timer."
+  },
+  {
+    "objectID": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html#arch-linux-daily-backups",
+    "href": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html#arch-linux-daily-backups",
+    "title": "BorgBackup Tutorial",
+    "section": "Arch Linux Daily Backups",
+    "text": "Arch Linux Daily Backups\nFor the interested, here are the files that I use for daily backups of $HOME:\n\n\n~/bin/backup-home.sh\n\n#!/bin/bash\n\necho \"$(date \"+%Y-%m-%d %H:%M:%S\") Starting backup\" &gt;&gt; /home/bd/logs/borg-backup.log\n\n# Set variables\nREPO=\"borg@192.168.178.172:/volume1/home-backup\"\nHOSTNAME=\"$(hostname)\"\nARCHIVE=\"${HOSTNAME}-$(date +%Y-%m-%d_%H:%M:%S)\"\n\n# Default to real run\nDRY_RUN=\"\"\nLIST_BACKUPS=false\nSHOW_HELP=false\nPRUNE_BACKUPS=false\nDELETE_ARCHIVE=\"\"\n\n# Function to show help\nshow_help() {\n    echo \"Usage: $0 [OPTIONS]\"\n    echo \"\"\n    echo \"Home directory backup script using Borg.\"\n    echo \"\"\n    echo \"OPTIONS:\"\n    echo \"  -n, --dry-run       Perform a dry run (no data will be written)\"\n    echo \"  -l, --list          List all backups in the repository\"\n    echo \"  -p, --prune         Prune old backups (keeps: 7 daily, 4 weekly, 12 monthly)\"\n    echo \"  -d, --delete ARCH   Delete a specific archive by name\"\n    echo \"  -h, --help          Show this help message\"\n    echo \"\"\n    echo \"Examples:\"\n    echo \"  $0                  Run normal backup\"\n    echo \"  $0 --dry-run        Test backup without writing data\"\n    echo \"  $0 --list           Show all existing backups\"\n    echo \"  $0 --prune          Remove old backups according to retention policy\"\n    echo \"  $0 --delete arch123 Delete specific archive named 'arch123'\"\n    echo \"\"\n}\n\n# Parse arguments\ni=1\nwhile [[ $i -le $# ]]; do\n    arg=\"${!i}\"\n    if [[ \"$arg\" == \"--dry-run\" || \"$arg\" == \"-n\" ]]; then\n        DRY_RUN=\"--dry-run --list\"\n        echo \"Running in dry-run mode (no data will be written)...\"\n    elif [[ \"$arg\" == \"--list\" || \"$arg\" == \"-l\" ]]; then\n        LIST_BACKUPS=true\n    elif [[ \"$arg\" == \"--prune\" || \"$arg\" == \"-p\" ]]; then\n        PRUNE_BACKUPS=true\n    elif [[ \"$arg\" == \"--delete\" || \"$arg\" == \"-d\" ]]; then\n        ((i++))\n        if [[ $i -le $# ]]; then\n            DELETE_ARCHIVE=\"${!i}\"\n        else\n            echo \"Error: --delete requires an archive name\"\n            exit 1\n        fi\n    elif [[ \"$arg\" == \"--help\" || \"$arg\" == \"-h\" ]]; then\n        SHOW_HELP=true\n    else\n        echo \"Unknown option: $arg\"\n        echo \"Use --help for usage information\"\n        exit 1\n    fi\n    ((i++))\ndone\n\n# If help option is used, show help and exit\nif [[ \"$SHOW_HELP\" == true ]]; then\n    show_help\n    exit 0\nfi\n\n# If list option is used, show backups and exit\nif [[ \"$LIST_BACKUPS\" == true ]]; then\n    echo \"Listing backups in repository...\"\n    borg list \"${REPO}\"\n    exit 0\nfi\n\n# If prune option is used, prune backups and exit\nif [[ \"$PRUNE_BACKUPS\" == true ]]; then\n    echo \"Pruning old backups...\"\n    echo \"Retention policy: 7 daily, 4 weekly, 12 monthly\"\n    borg prune --list --stats \\\n        --keep-daily=7 \\\n        --keep-weekly=4 \\\n        --keep-monthly=12 \\\n        \"${REPO}\"\n    echo \"Pruning completed.\"\n    exit 0\nfi\n\n# If delete option is used, delete specific archive and exit\nif [[ -n \"$DELETE_ARCHIVE\" ]]; then\n    echo \"Deleting archive: $DELETE_ARCHIVE\"\n    read -p \"Are you sure you want to delete archive '$DELETE_ARCHIVE'? (y/N): \" -n 1 -r\n    echo\n    if [[ $REPLY =~ ^[Yy]$ ]]; then\n        borg delete \"${REPO}::${DELETE_ARCHIVE}\"\n        echo \"Archive '$DELETE_ARCHIVE' deleted.\"\n    else\n        echo \"Deletion cancelled.\"\n    fi\n    exit 0\nfi\n\nmkdir -p ~/pkg_backup\npacman -Qe &gt; ~/pkg_backup/pkglist.txt\npacman -Qm &gt; ~/pkg_backup/aur-pkglist.txt\npacman -Qq &gt; ~/pkg_backup/full-pkglist.txt\n\n# Run Borg backup\nborg create --stats --show-rc $DRY_RUN \\\n    \"${REPO}::${ARCHIVE}\" \\\n    ~ \\\n    --exclude ~/.cache \\\n    --exclude ~/.local/share/docker \\\n    --exclude ~/.local/share/Trash \\\n    --exclude ~/Bilder \\\n    --exclude ~/Downloads \\\n    --exclude '**/.cache' \\\n    --exclude '**/.thumbnails' \\\n    --exclude '**/node_modules' \\\n    --exclude '**/__pycache__' \\\n    --exclude '*.pyc' \\\n    --exclude '*.tmp' \\\n    --exclude '**/venv' \\\n    --exclude '**/.venv' \\\n    --exclude '**/env' \\\n    --exclude '**/.env' \\\n    --exclude '**/renv'; exit_code=${PIPESTATUS[0]}\n\n# Check if the Borg command was successful\nif [ $exit_code -eq 0 ]; then\n  echo \"$(date \"+%Y-%m-%d %H:%M:%S\") Backup completed successfully with exit code $exit_code!\" &gt;&gt; /home/bd/logs/borg-backup.log\n  exit 0\nelse\n  echo \"$(date \"+%Y-%m-%d %H:%M:%S\") Backup failed with exit code $exit_code!\" &gt;&gt; /home/bd/logs/borg-backup.log\n  exit 1\nfi\n\n\n\n\n~/.config/systemd/user/borg-backup.service\n\n[Unit]\nDescription=Run Borg Backup Script\n\n[Service]\nType=oneshot\nEnvironment=\"BORG_REPO=ssh://borg@192.168.178.172:/volume1/home-backup\"\nEnvironment=\"BORG_PASSPHRASE=xxxxxxXXXxxxxxxx\"\nExecStart=/home/bd/bin/backup-home.sh\nStandardOutput=append:/home/bd/logs/borg-backup.log\nStandardError=inherit\n\n\n\n~/.config/systemd/user/borg-backup.service\n\n[Unit]\nDescription=Run Borg Backup Daily\n\n[Timer]\nOnCalendar=10:00\nPersistent=true\n\n[Install]\nWantedBy=timers.target\n\n\n\n\nTerminal\n\n$ systemctl --user daemon-reload\n$ systemctl --user restart borg-backup.timer\n$ systemctl --user enable borg-backup.timer"
+  },
+  {
+    "objectID": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html#interesting-fact",
+    "href": "posts/2025-05-19_borg-backup-tutorial/borg-backup-tutorial.html#interesting-fact",
+    "title": "BorgBackup Tutorial",
+    "section": "Interesting Fact",
+    "text": "Interesting Fact\nBorgBackup uses content-defined chunking for deduplication. This means that even if a file is moved, renamed, or slightly changed, unchanged data blocks are reused, saving massive amounts of space over time compared to simple file-based backups."
+  },
+  {
+    "objectID": "posts/2025-05-23_understanding-umask/understanding-umask.html",
+    "href": "posts/2025-05-23_understanding-umask/understanding-umask.html",
+    "title": "Understanding the umask Command in Linux",
+    "section": "",
+    "text": "The umask command in Unix-like operating systems controls the default permission settings for newly created files and directories. Understanding umask is crucial for managing security and ensuring proper access control on a multi-user system."
+  },
+  {
+    "objectID": "posts/2025-05-23_understanding-umask/understanding-umask.html#temporary-change",
+    "href": "posts/2025-05-23_understanding-umask/understanding-umask.html#temporary-change",
+    "title": "Understanding the umask Command in Linux",
+    "section": "Temporary Change",
+    "text": "Temporary Change\nSetting umask on the command line changes it for the current session only."
+  },
+  {
+    "objectID": "posts/2025-05-23_understanding-umask/understanding-umask.html#permanent-change",
+    "href": "posts/2025-05-23_understanding-umask/understanding-umask.html#permanent-change",
+    "title": "Understanding the umask Command in Linux",
+    "section": "Permanent Change",
+    "text": "Permanent Change\nTo make it permanent, add the command to your shell configuration file.\nFor Bash:\n\n\n~/.bashrc\n\numask 0027"
+  },
+  {
+    "objectID": "posts/2025-05-15_eza-tutorial/eza-tutorial.html",
+    "href": "posts/2025-05-15_eza-tutorial/eza-tutorial.html",
+    "title": "Exploring Directory Structures with eza",
+    "section": "",
+    "text": "eza is a modern replacement for ls, providing a more user-friendly and feature-rich way to explore directories and file systems. In this tutorial, we will explore the following command:\n\n\nTerminal\n\n$ eza -T -lh -L 2 --total-size -s size\n\nWe will explain what each part of the command does, how to use it effectively in both Bash and Fish shells, and demonstrate appending a folder path to explore it recursively."
+  },
+  {
+    "objectID": "posts/2025-05-15_eza-tutorial/eza-tutorial.html#introduction",
+    "href": "posts/2025-05-15_eza-tutorial/eza-tutorial.html#introduction",
+    "title": "Exploring Directory Structures with eza",
+    "section": "",
+    "text": "eza is a modern replacement for ls, providing a more user-friendly and feature-rich way to explore directories and file systems. In this tutorial, we will explore the following command:\n\n\nTerminal\n\n$ eza -T -lh -L 2 --total-size -s size\n\nWe will explain what each part of the command does, how to use it effectively in both Bash and Fish shells, and demonstrate appending a folder path to explore it recursively."
+  },
+  {
+    "objectID": "posts/2025-05-15_eza-tutorial/eza-tutorial.html#breaking-down-the-command",
+    "href": "posts/2025-05-15_eza-tutorial/eza-tutorial.html#breaking-down-the-command",
+    "title": "Exploring Directory Structures with eza",
+    "section": "Breaking Down the Command",
+    "text": "Breaking Down the Command\n\n\nTerminal\n\n$ eza -T -lh -L 2 --total-size -s size\n\n\nFlags and Their Meanings:\n\n-T: Displays the output in a tree view, showing nested folder contents in a hierarchical structure.\n-l: Uses the long view format, providing detailed information about each file (like permissions, owner, size, and date).\n-h: Human-readable file sizes, e.g., 1.2K, 3.4M, etc.\n-L 2: Limits the recursion depth to 2 levels when printing directory contents.\n--total-size: Displays the cumulative size of the directory and its contents.\n-s size: Sorts files and directories by their size."
+  },
+  {
+    "objectID": "posts/2025-05-15_eza-tutorial/eza-tutorial.html#appending-a-folder-path",
+    "href": "posts/2025-05-15_eza-tutorial/eza-tutorial.html#appending-a-folder-path",
+    "title": "Exploring Directory Structures with eza",
+    "section": "Appending a Folder Path",
+    "text": "Appending a Folder Path\nYou can use this command to explore a specific folder by appending the path to the end. For example, to explore the ~/Documents directory:\n\n\nTerminal\n\n$ eza -T -lh -L 2 --total-size -s size ~/Documents\n\nThis will present a tree view of the Documents directory, showing up to two levels deep, with files sorted by size."
+  },
+  {
+    "objectID": "posts/2025-05-15_eza-tutorial/eza-tutorial.html#usage-in-fish",
+    "href": "posts/2025-05-15_eza-tutorial/eza-tutorial.html#usage-in-fish",
+    "title": "Exploring Directory Structures with eza",
+    "section": "Usage in Fish",
+    "text": "Usage in Fish\nFish shell syntax is slightly different for functions and aliases but running standalone commands like this one works identically:\n\n\nTerminal\n\n&gt; eza -T -lh -L 2 --total-size -s size\n\nThe &gt; symbol indicates Fish shell’s prompt. If you want to create a reusable command or alias in Fish, use:\n\n\nTerminal\n\n&gt; function listtree\n    eza -T -lh -L 2 --total-size -s size $argv\n  end\n\nThis defines a function listtree that behaves like our base command."
+  },
+  {
+    "objectID": "posts/2025-05-15_eza-tutorial/eza-tutorial.html#example-output",
+    "href": "posts/2025-05-15_eza-tutorial/eza-tutorial.html#example-output",
+    "title": "Exploring Directory Structures with eza",
+    "section": "Example Output",
+    "text": "Example Output\nAssuming a directory contains files and subfolders, the output might look like:\n\n\nTerminal\n\n#| code-overflow: scroll\nPermissions Size User Date Modified Name\ndrwxr-xr-x  385M 33   15 Mai 22:42  code/quarto/blog2310\n.rw-r--r--    17 33   17 Apr 22:24  ├── styles.css\n.rw-r--r--   171 33    9 Mai 22:35  ├── index.qmd\n.rw-r--r--   253 33   15 Mai 22:38  ├── blog2310.Rproj\n.rw-r--r--   398 33    2 Mai 07:13  ├── about.qmd\n.rw-r--r--   616 33   13 Mai 21:26  ├── qmd-tutorial-prompt.md\n.rw-r--r--  1,2k 33   13 Mai 20:59  ├── _quarto.yml\ndrwxr-xr-x  5,2k 33    9 Mai 22:32  ├── _extensions\ndrwxr-xr-x   35k 33   13 Mai 21:23  ├── _assets\n.rw-r--r--   61k 33   17 Apr 22:24  ├── profile.jpg\ndrwxr-xr-x  1,4M 33   25 Apr 21:37  ├── _site\ndrwxr-xr-x  2,7M 33   15 Mai 22:42  ├── docs\ndrwxr-xr-x  351M 33   15 Mai 22:40  └── posts"
+  },
+  {
+    "objectID": "posts/2025-05-15_eza-tutorial/eza-tutorial.html#interesting-fact",
+    "href": "posts/2025-05-15_eza-tutorial/eza-tutorial.html#interesting-fact",
+    "title": "Exploring Directory Structures with eza",
+    "section": "Interesting Fact",
+    "text": "Interesting Fact\neza was written in Rust and is known for its speed and safety compared to traditional ls. It also supports Git integration, showing Git status next to files out of the box when run inside a Git repo."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "blog2310",
+    "section": "",
+    "text": "Understanding the umask Command in Linux\n\n\n\nlinux\n\nshell\n\npermissions\n\nbash\n\nfish\n\n\n\nLearn how to use the umask command in Linux to control default file and directory permissions.\n\n\n\n\n\nMay 23, 2025\n\n\n3atthias 3erger\n\n\n\n\n\n\n\n\n\n\n\n\nBorgBackup Tutorial\n\n\n\nbackup\n\nlinux\n\nborg\n\nlinux\n\ntutorial\n\n\n\nA comprehensive tutorial on using BorgBackup for secure and efficient backups.\n\n\n\n\n\nMay 19, 2025\n\n\n3atthias 3erger\n\n\n\n\n\n\n\n\n\n\n\n\nExploring Directory Structures with eza\n\n\n\nshell\n\ntooling\n\neza\n\nlinux\n\nshell\n\n\n\nA comprehensive guide to using eza with tree view and size sorting.\n\n\n\n\n\nMay 15, 2025\n\n\n3atthias 3erger\n\n\n\n\n\n\n\n\n\n\n\n\nMastering the screen Command in Linux\n\n\n\nlinux\n\nshell\n\nscreen\n\ntutorial\n\ntooling\n\n\n\nA comprehensive tutorial on how to use the screen command in Linux for terminal multiplexing.\n\n\n\n\n\nMay 13, 2025\n\n\n3atthias 3erger\n\n\n\n\n\n\n\n\n\n\n\n\nUnderstanding pyproject.toml in Python Projects\n\n\n\npython\n\npackaging\n\ntooling\n\n\n\nA deep dive into the purpose and power of pyproject.toml for modern Python tooling.\n\n\n\n\n\nMay 8, 2025\n\n\n3atthias 3erger\n\n\n\n\n\n\n\n\n\n\n\n\nSetting Up a Python Project with uv and ruff\n\n\n\npython\n\nruff\n\nuv\n\ntutorial\n\n\n\nA step-by-step guide to setting up a modern Python project using uv for dependency management and ruff for linting, including pre-commit integration.\n\n\n\n\n\nMay 6, 2025\n\n\n3atthias 3erger\n\n\n\n\n\n\n\n\n\n\n\n\nUsing the subprocess Module in Python\n\n\n\npython\n\nsubprocess\n\ntutorial\n\n\n\nA practical guide to using Python’s subprocess module for running and managing external commands, with examples and best practices.\n\n\n\n\n\nMay 5, 2025\n\n\n3atthias 3erger\n\n\n\n\n\n\n\n\n\n\n\n\ndbt with DuckDB and Postgres: Python + SQL Models\n\n\n\ndbt\n\nduckdb\n\npostgres\n\npython\n\ndata engineering\n\ntutorial\n\n\n\nA step-by-step tutorial on using dbt with DuckDB and Postgres, including Python and SQL models, and exporting data from DuckDB to PostgreSQL.\n\n\n\n\n\nApr 17, 2025\n\n\n3atthias 3erger\n\n\n\n\n\n\n\n\n\n\n\n\nUsing Python Models with dbt and DuckDB\n\n\n\ndbt\n\nduckdb\n\npython\n\ndata engineering\n\ntutorial\n\n\n\nA step-by-step tutorial on combining Python and SQL models in dbt using the dbt-duckdb adapter, with practical examples and setup instructions.\n\n\n\n\n\nApr 16, 2025\n\n\n3atthias 3erger\n\n\n\n\n\nNo matching items"
+  }
+]

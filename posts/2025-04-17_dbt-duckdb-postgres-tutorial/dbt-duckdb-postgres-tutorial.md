@@ -1,0 +1,343 @@
+# dbt with DuckDB and Postgres: Python + SQL Models
+3atthias 3erger
+2025-04-17
+
+This tutorial walks you through:
+
+1.  Installing and setting up Postgres on Arch Linux
+2.  Creating a virtual environment and installing dependencies
+3.  Setting up a `dbt-duckdb` project
+4.  Adding a **Python model** (DuckDB)
+5.  Adding a **SQL model** (DuckDB)
+6.  Creating a **final Python model that exports to Postgres**
+
+------------------------------------------------------------------------
+
+## Step 1: Install and Configure PostgreSQL on Arch Linux
+
+<div class="code-with-filename">
+
+**Terminal**
+
+``` bash
+# Install Postgres
+$ sudo pacman -S postgresql
+
+# Initialize the database
+$ sudo -iu postgres initdb -D /var/lib/postgres/data
+
+# Start and enable the service
+$ sudo systemctl start postgresql
+$ sudo systemctl enable postgresql
+
+# Set a password for the postgres user
+$ sudo -iu postgres psql
+
+# Inside psql:
+\password postgres
+# Then exit:
+\q
+
+# Create a database as postgres user for this tutorial
+$ sudo -iu postgres createdb mydb
+```
+
+</div>
+
+> You now have a PostgreSQL database running at `localhost:5432`.
+
+------------------------------------------------------------------------
+
+## Step 2: Create Python Virtual Environment
+
+<div class="code-with-filename">
+
+**Terminal**
+
+``` bash
+$ python -m venv .venv
+$ source .venv/bin/activate  
+# or .venv\Scripts\activate on Windows; 
+# or source .venv/bin/activate.fish
+
+$ pip install dbt-duckdb duckdb pandas psycopg2
+```
+
+</div>
+
+------------------------------------------------------------------------
+
+## Step 3: Initialize dbt Project
+
+<div class="code-with-filename">
+
+**Terminal**
+
+``` bash
+$ dbt init dbt_duckdb_postgres_demo
+$ cd dbt_duckdb_postgres_demo
+```
+
+</div>
+
+Choose `duckdb` as the adapter.
+
+------------------------------------------------------------------------
+
+## Step 4: Configure dbt Profile
+
+Edit `~/.dbt/profiles.yml`:
+
+``` yaml
+dbt_duckdb_postgres_demo:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "dbt_duckdb_postgres_demo.duckdb"
+```
+
+------------------------------------------------------------------------
+
+## Step 5: Add Seed Data
+
+Create `seeds/my_seed_data.csv`:
+
+``` csv
+id,first_name,last_name
+1,Alice,Smith
+2,Bob,Jones
+3,Charlie,Brown
+```
+
+Then run:
+
+<div class="code-with-filename">
+
+**Terminal**
+
+``` bash
+$ dbt seed
+
+07:07:17  Running with dbt=1.9.4
+07:07:17  Registered adapter: duckdb=1.9.3
+07:07:17  Unable to do partial parsing because saved manifest not found. Starting full parse.
+07:07:18  Found 2 models, 1 seed, 4 data tests, 428 macros
+07:07:18
+07:07:18  Concurrency: 1 threads (target='dev')
+07:07:18
+07:07:18  1 of 1 START seed file main.my_seed_data ....................................... [RUN]
+07:07:18  1 of 1 OK loaded seed file main.my_seed_data ................................... [INSERT 3 in 0.04s]
+07:07:18
+07:07:18  Finished running 1 seed in 0 hours 0 minutes and 0.12 seconds (0.12s).
+07:07:18
+07:07:18  Completed successfully
+07:07:18
+07:07:18  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 TOTAL=1
+```
+
+</div>
+
+------------------------------------------------------------------------
+
+## Step 6: Create a Python Model (DuckDB)
+
+Create `models/my_python_model.py`:
+
+``` python
+import pandas as pd
+
+def model(dbt, session):
+    dbt.config(materialized="table")
+
+    df = dbt.ref("my_seed_data").to_df()
+    df["full_name"] = df["first_name"] + " " + df["last_name"]
+    df["name_length"] = df["full_name"].str.len()
+
+    return df
+```
+
+------------------------------------------------------------------------
+
+## Step 7: Add a SQL Model (DuckDB)
+
+Create `models/my_sql_model.sql`:
+
+``` sql
+SELECT
+    id,
+    full_name,
+    name_length
+FROM {{ ref('my_python_model') }}
+WHERE name_length > 10
+```
+
+------------------------------------------------------------------------
+
+## Step 8: Add Final Python Model That Writes to Postgres
+
+Create `models/export_to_postgres.py`:
+
+``` python
+import pandas as pd
+import psycopg2
+from psycopg2 import sql
+
+def model(dbt, session):
+    dbt.config(materialized="table")
+
+    df = dbt.ref("my_sql_model").to_df()
+
+    # --- STEP 1: Create table in PostgreSQL if it doesn't exist ---
+    create_table_if_not_exists(df)
+
+    # --- STEP 2: Use DuckDB to load and insert the data ---
+    session.execute("INSTALL postgres;")
+    session.execute("LOAD postgres;")
+    session.execute("ATTACH 'dbname=mydb user=postgres password=postgres host=127.0.0.1' AS mydb (TYPE postgres);")
+    session.register("export_df", df)
+
+    session.execute("TRUNCATE mydb.final_output;")
+
+    session.execute("""
+        INSERT INTO mydb.final_output
+        SELECT * FROM export_df;
+    """)
+
+    return df
+
+
+# Helper: Map pandas dtypes to PostgreSQL types
+def duckdb_type(dtype):
+    if pd.api.types.is_integer_dtype(dtype):
+        return "BIGINT"
+    elif pd.api.types.is_float_dtype(dtype):
+        return "DOUBLE PRECISION"
+    elif pd.api.types.is_bool_dtype(dtype):
+        return "BOOLEAN"
+    elif pd.api.types.is_datetime64_any_dtype(dtype):
+        return "TIMESTAMP"
+    else:
+        return "TEXT"
+
+
+# Create the table in Postgres if it doesn't already exist
+def create_table_if_not_exists(df):
+    conn = psycopg2.connect(
+        dbname="mydb",
+        user="postgres",
+        password="postgres",
+        host="127.0.0.1",
+        port=5432
+    )
+    cur = conn.cursor()
+
+    # Check if table exists
+    cur.execute("""
+        SELECT EXISTS (
+            SELECT FROM information_schema.tables
+            WHERE table_schema = 'public'
+            AND table_name = 'final_output'
+        );
+    """)
+    exists = cur.fetchone()[0]
+
+    if not exists:
+        # Build CREATE TABLE statement
+        columns = [
+            sql.SQL("{} {}").format(
+                sql.Identifier(col),
+                sql.SQL(duckdb_type(dtype))
+            )
+            for col, dtype in zip(df.columns, df.dtypes)
+        ]
+        create_stmt = sql.SQL("CREATE TABLE final_output ({})").format(
+            sql.SQL(", ").join(columns)
+        )
+
+        cur.execute(create_stmt)
+        conn.commit()
+        print("✅ Created table 'final_output' in PostgreSQL")
+
+    cur.close()
+    conn.close()
+```
+
+~~Replace `<your_password>` with your actual Postgres password.~~ TODO:
+What about authentification?
+
+------------------------------------------------------------------------
+
+## Step 9: Run Everything
+
+<div class="code-with-filename">
+
+**Terminal**
+
+``` bash
+$ dbt run
+
+10:04:57  Running with dbt=1.9.4
+10:04:58  Registered adapter: duckdb=1.9.3
+10:04:58  Unable to do partial parsing because a project config has changed
+10:04:58  Found 3 models, 1 seed, 428 macros
+10:04:58
+10:04:58  Concurrency: 1 threads (target='dev')
+10:04:58
+10:04:58  1 of 3 START python table model main.my_python_model ........................... [RUN]
+10:04:59  1 of 3 OK created python table model main.my_python_model ...................... [OK in 0.24s]
+10:04:59  2 of 3 START sql view model main.my_sql_model .................................. [RUN]
+10:04:59  2 of 3 OK created sql view model main.my_sql_model ............................. [OK in 0.03s]
+10:04:59  3 of 3 START python table model main.export_to_postgres ........................ [RUN]
+10:04:59  3 of 3 OK created python table model main.export_to_postgres ................... [OK in 0.08s]
+10:04:59
+10:04:59  Finished running 2 table models, 1 view model in 0 hours 0 minutes and 0.42 seconds (0.42s).
+10:04:59
+10:04:59  Completed successfully
+10:04:59
+10:04:59  Done. PASS=3 WARN=0 ERROR=0 SKIP=0 TOTAL=3
+```
+
+</div>
+
+This will: - Seed the data - Run a Python model with pandas - Run a SQL
+model - Push final results into PostgreSQL
+
+------------------------------------------------------------------------
+
+## Step 10: Verify in Postgres
+
+<div class="code-with-filename">
+
+**Terminal**
+
+``` bash
+$ psql -U postgres -d mydb
+
+# Inside psql:
+SELECT * FROM final_output;
+```
+
+</div>
+
+------------------------------------------------------------------------
+
+## Summary
+
+| Step | Tool         | Output                       |
+|------|--------------|------------------------------|
+| 1    | PostgreSQL   | Local DB on Arch Linux       |
+| 2    | Python venv  | Isolated dev environment     |
+| 3–7  | dbt + DuckDB | Models with SQL + Python     |
+| 8    | DuckDB → PG  | Exported table into Postgres |
+
+------------------------------------------------------------------------
+
+## Tips
+
+- You can also export using `.sql` files instead of `.py`
+- This pattern works well for hybrid DuckDB-Postgres pipelines
+- Consider Airbyte/dbt-external-tables for automated syncs
+
+*If you are missing some explanation and testing of a feature in this
+tutorial, let me know in the comments section below.*
